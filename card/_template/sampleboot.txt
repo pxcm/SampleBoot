@@ -1,0 +1,4 @@
+My OS 1.0
+
+The first line of this file is the name shown in the SampleBoot menu.
+The rest of the file is ignored.

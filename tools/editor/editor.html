@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SampleBoot Theme Editor</title>
+<style>
+:root {
+  --bg: #111214; --panel: #1a1c20; --panel2: #22252a; --line: #2e3238;
+  --text: #e6e7ea; --dim: #9aa0a8; --accent: #e53935; --ok: #4caf50;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+header { padding: 18px 24px 10px; border-bottom: 1px solid var(--line); }
+header h1 { margin: 0 0 8px; font-size: 22px; letter-spacing: .3px; display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+header .logo { display: flex; justify-content: center; }
+header .logo svg { height: 64px; width: auto; display: block; }
+header h1 span { font-weight: 200; padding-bottom: 4px; }
+@media (max-width: 767px) { header h1 { text-align: center; display: block; } header .logo { margin-bottom: 10px; } }
+header p { margin: 0; color: var(--dim); max-width: 980px; }
+main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(380px, 520px); gap: 0; }
+@media (max-width: 1100px) { main { grid-template-columns: 1fr; } #previews { position: static !important; max-height: none !important; } }
+#previews { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow: auto; padding: 18px 24px; border-right: 1px solid var(--line); }
+#controls { padding: 18px 24px 40px; }
+h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); margin: 26px 0 10px; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: 14px; margin: 18px 0 6px; color: var(--text); }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.bar label { color: var(--dim); }
+.screens { display: flex; flex-wrap: wrap; gap: 14px; }
+figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px; width: fit-content; max-width: 100%; }
+figcaption { color: var(--dim); font-size: 12px; margin-bottom: 6px; }
+canvas.screen { width: var(--w, 400px); max-width: 100%; aspect-ratio: 4 / 3; display: block;
+  image-rendering: pixelated; image-rendering: crisp-edges; border-radius: 3px; background: #000; }
+.thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+.thumb { width: 84px; height: 63px; border-radius: 4px; border: 2px solid transparent; cursor: pointer;
+  background: var(--panel2) center/cover no-repeat; display: flex; align-items: flex-end; justify-content: center;
+  font-size: 10px; color: #fff; text-shadow: 0 1px 2px #000; padding: 2px; }
+.thumb.sel { border-color: var(--accent); }
+.thumb.none { background: repeating-linear-gradient(45deg, #222 0 6px, #2a2a2a 6px 12px); }
+button, .btn { background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+  padding: 7px 12px; font: inherit; cursor: pointer; }
+button:hover, .btn:hover { border-color: var(--dim); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+input[type=text], input[type=number], textarea, select {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; }
+textarea { width: 100%; font-family: var(--mono); font-size: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.field { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.field:first-of-type { border-top: 0; }
+.field .key { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
+.field .help { grid-column: 1 / -1; color: var(--dim); font-size: 12.5px; }
+.field .ctl { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+.field .err { grid-column: 1 / -1; color: #ff8a80; font-size: 12px; display: none; }
+.field.bad .err { display: block; }
+.field.bad input { border-color: #ff8a80; }
+input[type=color] { width: 38px; height: 30px; padding: 0 2px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel2); cursor: pointer; }
+input.hex { width: 86px; font-family: var(--mono); text-transform: uppercase; }
+input[type=number] { width: 80px; }
+input[type=range] { width: 140px; accent-color: var(--accent); }
+.swatch { width: 18px; height: 18px; border-radius: 3px; border: 1px solid #0008; }
+.mpc { font-size: 11px; color: var(--dim); font-family: var(--mono); min-width: 74px; }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.note { color: var(--dim); font-size: 12.5px; }
+.out-actions { display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; align-items: center; }
+#copied { color: var(--ok); display: none; }
+footer { color: var(--dim); font-size: 12px; padding: 14px 24px 30px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <!--LOGO-->
+  </div>
+  <h1>Theme Editor</h1>
+  <p>Preview every SampleBoot screen as the MPC Sample draws it, change the settings and colours, then copy the
+     generated <code>sampleboot.conf</code> into <code>autorun/sampleboot/</code> on the SD card. Everything runs in this
+     page: nothing is sent anywhere.</p>
+</header>
+<main>
+  <section id="previews">
+    <h2>Preview</h2>
+    <div class="bar">
+      <label>Test image</label>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <div class="bar">
+      <label class="btn" for="upload">Load your own image…</label>
+      <input type="file" id="upload" accept="image/png,image/jpeg,image/bmp" hidden>
+      <label>Name of the system <input type="text" id="osname" value="CustomOS v1.0" style="width:150px"></label>
+      <label><input type="checkbox" id="rgb565" checked> Colours as on the MPC panel (RGB565)</label>
+      <label>Zoom <select id="zoom"><option value="1">1×</option><option value="1.25" selected>1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="3">3×</option></select></label>
+      <button id="replayBtn" title="The splash appears line by line, then stays for SPLASH_TIME seconds">Replay the splash</button>
+    </div>
+    <div class="screens" id="screens"></div>
+    <p class="note">The MPC Sample's panel shows 65,536 colours (16-bit RGB565: 32 levels of red, 64 of green,
+      32 of blue). With the checkbox on, the preview rounds every colour the same way. Brightness and viewing angle
+      of the real screen still make colours look a little different: check the result on the device.</p>
+  </section>
+
+  <section id="controls">
+    <h2>Start from</h2>
+    <div class="card">
+      <p class="note" style="margin-top:0">Paste your current <code>sampleboot.conf</code> to start from your own values.
+        Without it, the editor starts from the original values.</p>
+      <textarea id="importText" rows="5" placeholder="Paste sampleboot.conf here…"></textarea>
+      <div class="out-actions">
+        <button id="importBtn">Load these settings</button>
+        <button id="resetBtn">Back to the original values</button>
+        <span class="note" id="importMsg"></span>
+      </div>
+      <h3>Ready-made themes</h3>
+      <div class="presets" id="presets"></div>
+      <p class="note">A theme changes the colours only; the behaviour settings stay as they are.</p>
+    </div>
+
+    <h2>Behaviour</h2>
+    <div class="card" id="behaviour"></div>
+
+    <h2>Splash screen</h2>
+    <div class="card" id="splashCard"></div>
+
+    <h2>Style</h2>
+    <div id="style"></div>
+
+    <h2>Your sampleboot.conf</h2>
+    <div class="card">
+      <p class="note" style="margin-top:0">The whole file: replace <code>autorun/sampleboot/sampleboot.conf</code> on the SD
+        card with it. <code>sampleboot.original.conf</code>, next to it, always keeps the original values.</p>
+      <div class="out-actions">
+        <button class="primary" id="copyBtn">Copy</button>
+        <button id="downloadBtn">Download sampleboot.conf</button>
+        <span id="copied">Copied</span>
+      </div>
+      <textarea id="output" rows="24" readonly wrap="off" style="white-space:pre;overflow-x:auto"></textarea>
+    </div>
+  </section>
+</main>
+<footer>
+  SampleBoot is an independent project, not affiliated with or endorsed by inMusic Brands or Akai Professional.
+  Text on the screens is drawn with the same DejaVu Sans glyphs SampleBoot uses on the device (DejaVu fonts licence).
+  Test images (the made-up "CustomOS" logo) generated with Magnific.
+</footer>
+
+<script>
+"use strict";
+/* ---- data put in by tools/build_editor.py ---- */
+const FONTS = /*FONTS*/null;
+const IMAGES = /*IMAGES*/null;
+const SPLASHES = /*SPLASHES*/null;
+const ORIGINAL_CONF = /*CONF*/"";
+
+/* =====================================================================
+ * Renderer: a line-by-line port of the drawing code in src/sampleboot-ui.c,
+ * so the preview matches the device pixel for pixel. Keep the two in step.
+ * ===================================================================== */
+const W = 320, H = 240, BAR = 46, CONFIRM_S = 10;
+const ARROW_H = 18, ARROW_SW = 2.0, SPLASH_REVEAL = 0.8;
+
+function decodeFonts() {
+  const out = {};
+  for (const [name, f] of Object.entries(FONTS)) {
+    const bin = atob(f.px), px = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) px[i] = bin.charCodeAt(i);
+    const map = new Map();
+    for (const g of f.g) map.set(g[0], { adv: g[1], w: g[2], h: g[3], x: g[4], y: g[5], off: g[6] });
+    out[name] = { ascent: f.ascent, height: f.height, px, map };
+  }
+  return out;
+}
+const F = decodeFonts();
+
+class Screen {
+  constructor() { this.p = new Uint32Array(W * H); }
+  blend(x, y, c, a) {
+    if (x < 0 || x >= W || y < 0 || y >= H || a <= 0) return;
+    const i = y * W + x;
+    if (a >= 255) { this.p[i] = c; return; }
+    const o = this.p[i];
+    const r = Math.floor(((o >> 16 & 255) * (255 - a) + (c >> 16 & 255) * a) / 255);
+    const g = Math.floor(((o >> 8 & 255) * (255 - a) + (c >> 8 & 255) * a) / 255);
+    const b = Math.floor(((o & 255) * (255 - a) + (c & 255) * a) / 255);
+    this.p[i] = (r << 16) | (g << 8) | b;
+  }
+  fill(x0, y0, w, h, c, a) {
+    for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) this.blend(x, y, c, a);
+  }
+  clear(c) { this.p.fill(c); }
+  /* Open arrow: two strokes at 45 degrees meeting at a square tip, 4x4 samples per pixel. */
+  chevron(cx, cy, h, sw, dir, c) {
+    const half = h / 2, hw = sw / 2, k = 0.70710678118654752;
+    const tx = cx + dir * half / 2, len = half / k + hw, ux = -dir * k;
+    const s1x = tx - ux * hw, s1y = cy + k * hw, s2x = s1x, s2y = cy - k * hw;
+    const inStroke = (px, py, sx, sy, vx, vy) => {
+      const dx = px - sx, dy = py - sy, t = dx * vx + dy * vy, d = dx * vy - dy * vx;
+      return t >= 0 && t <= len && d >= -hw && d <= hw;
+    };
+    const x0 = Math.floor(cx - half / 2 - sw), x1 = Math.ceil(cx + half / 2 + sw);
+    const y0 = Math.floor(cy - half - sw), y1 = Math.ceil(cy + half + sw);
+    for (let y = y0; y <= y1; y++)
+      for (let x = x0; x <= x1; x++) {
+        let n = 0;
+        for (let j = 0; j < 4; j++)
+          for (let i = 0; i < 4; i++) {
+            const px = x + (i + 0.5) / 4, py = y + (j + 0.5) / 4;
+            if (inStroke(px, py, s1x, s1y, ux, -k) || inStroke(px, py, s2x, s2y, ux, k)) n++;
+          }
+        if (n) this.blend(x, y, c, Math.trunc(n * 255 / 16));
+      }
+  }
+}
+
+function glyph(f, cp) {
+  let key = cp;
+  if (!((cp >= 32 && cp <= 126) || (cp >= 160 && cp <= 255) || cp === 0x2026)) key = 63; // '?'
+  return f.map.get(key);
+}
+function textW(f, s) { let w = 0; for (const ch of s) w += glyph(f, ch.codePointAt(0)).adv; return w; }
+function drawText(scr, f, x, baseline, s, c) {
+  for (const ch of s) {
+    const g = glyph(f, ch.codePointAt(0));
+    for (let yy = 0; yy < g.h; yy++)
+      for (let xx = 0; xx < g.w; xx++)
+        scr.blend(x + g.x + xx, baseline + g.y + yy, c, f.px[g.off + yy * g.w + xx]);
+    x += g.adv;
+  }
+}
+function fit(f, s, maxw) {
+  if (textW(f, s) <= maxw) return s;
+  const cps = Array.from(s);
+  while (cps.length) {
+    cps.pop();
+    const t = cps.join("") + "…";
+    if (textW(f, t) <= maxw || cps.length === 0) return t;
+  }
+  return "…";
+}
+function textCenter(scr, f, cx, baseline, s, maxw, c) {
+  const t = fit(f, s, maxw);
+  drawText(scr, f, cx - Math.trunc(textW(f, t) / 2), baseline, t, c);
+}
+const pct = p => Math.trunc(Math.max(0, Math.min(100, p)) * 255 / 100);
+
+function drawTemplate(scr, th, entry) {
+  scr.clear(th.TEMPLATE_BG);
+  let name = entry.label, sub = "";
+  if (entry.stock) { name = "AKAI"; sub = entry.fw ? "Original firmware " + entry.fw : "Original firmware"; }
+  let cy = H / 2 - 6;
+  const FG = th.TEMPLATE_TEXT, DIM = th.TEMPLATE_SUBTEXT;
+  let f = F.big;
+  if (textW(f, name) <= W - 32) {
+    textCenter(scr, f, W / 2, cy + 10, name, W - 32, FG);
+  } else {
+    const len = name.length; let best = -1;
+    for (let k = 0; k < len; k++)
+      if (name[k] === " " && (best < 0 || Math.abs(k - Math.trunc(len / 2)) < Math.abs(best - Math.trunc(len / 2)))) best = k;
+    if (best > 0) {
+      const a = name.slice(0, best), b = name.slice(best + 1);
+      f = (textW(F.big, a) <= W - 32 && textW(F.big, b) <= W - 32) ? F.big : F.name;
+      textCenter(scr, f, W / 2, cy - 4, a, W - 32, FG);
+      textCenter(scr, f, W / 2, cy - 4 + f.height, b, W - 32, FG);
+      cy += Math.trunc(f.height / 2);
+    } else textCenter(scr, F.name, W / 2, cy + 6, name, W - 32, FG);
+  }
+  if (sub) textCenter(scr, F.small, W / 2, cy + 44, sub, W - 32, DIM);
+}
+function drawBg(scr, th, entry) {
+  if (entry.pix) scr.p.set(entry.pix); else drawTemplate(scr, th, entry);
+}
+function entryLabel(entry) {
+  if (entry.stock) return entry.fw ? "AKAI firmware " + entry.fw : "AKAI original firmware";
+  return entry.label;
+}
+function drawMenu(scr, th, entry, idx, n, countdown) {
+  drawBg(scr, th, entry);
+  scr.fill(0, 0, W, BAR, th.TOP_BAR_BG, pct(th.TOP_BAR_OPACITY));
+  scr.fill(0, BAR - 2, W, 2, th.TOP_BAR_LINE, 255);
+  drawText(scr, F.name, 14, 28, "SampleBoot", th.TOP_BAR_TITLE);
+  if (countdown >= 0) {
+    const s = "Auto start in " + countdown + " s";
+    drawText(scr, F.label, W - 14 - textW(F.label, s), 28, s, th.TOP_BAR_COUNTDOWN);
+  }
+  scr.fill(0, H - BAR, W, BAR, th.BOTTOM_BAR_BG, pct(th.BOTTOM_BAR_OPACITY));
+  scr.fill(0, H - BAR, W, 2, th.BOTTOM_BAR_LINE, 255);
+  textCenter(scr, F.name, W / 2, H - 25, entryLabel(entry), W - 64, th.BOTTOM_BAR_NAME);
+  const info = (idx + 1) + " / " + n + "   ·   turn to browse   ·   push to start";
+  textCenter(scr, F.small, W / 2, H - 8, info, W - 16, th.BOTTOM_BAR_INFO);
+  if (n > 1) { scr.chevron(14.5, H - 29.5, ARROW_H, ARROW_SW, -1, th.BOTTOM_BAR_ARROWS); scr.chevron(W - 13.5, H - 29.5, ARROW_H, ARROW_SW, +1, th.BOTTOM_BAR_ARROWS); }
+}
+function drawConfirm(scr, th, entry, idx, n, left) {
+  drawMenu(scr, th, entry, idx, n, -1);
+  scr.fill(0, 0, W, H, th.POPUP_SHADE, pct(th.POPUP_SHADE_OPACITY));
+  const x0 = 24, y0 = 52, w = W - 48, h = 136;
+  scr.fill(x0, y0, w, h, th.POPUP_BORDER, 255);
+  scr.fill(x0 + 2, y0 + 2, w - 4, h - 4, th.POPUP_BG, 255);
+  textCenter(scr, F.name, W / 2, y0 + 34, "Switch off the MPC?", w - 16, th.POPUP_TITLE);
+  textCenter(scr, F.small, W / 2, y0 + 66, "Push ENCODER or press POWER: switch off", w - 12, th.POPUP_TEXT);
+  textCenter(scr, F.small, W / 2, y0 + 84, "Turn ENCODER: back to the menu", w - 12, th.POPUP_TEXT);
+  textCenter(scr, F.small, W / 2, y0 + 116, "Back to the menu in " + left + " s", w - 12, th.POPUP_INFO);
+}
+function drawMessage(scr, th, msg) {
+  scr.clear(th.SWITCHOFF_BG);
+  textCenter(scr, F.name, W / 2, H / 2 + 6, msg, W - 24, th.SWITCHOFF_TEXT);
+}
+function drawStarting(scr, th, entry) {
+  drawBg(scr, th, entry);
+  scr.fill(0, H - BAR, W, BAR, th.BOTTOM_BAR_BG, pct(th.BOTTOM_BAR_OPACITY));
+  scr.fill(0, H - BAR, W, 2, th.BOTTOM_BAR_LINE, 255);
+  textCenter(scr, F.name, W / 2, H - 17, "Starting " + entryLabel(entry), W - 24, th.BOTTOM_BAR_NAME);
+}
+
+/* Same fit as load_image(): "contain" into 320x240 on a dark letterbox, bilinear. */
+function fitImage(img) {
+  const c = document.createElement("canvas");
+  c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+  const cx = c.getContext("2d"); cx.drawImage(img, 0, 0);
+  const w = c.width, h = c.height, src = cx.getImageData(0, 0, w, h).data;
+  const out = new Uint32Array(W * H);
+  if (w === W && h === H) {
+    for (let i = 0; i < W * H; i++) out[i] = (src[i * 4] << 16) | (src[i * 4 + 1] << 8) | src[i * 4 + 2];
+    return out;
+  }
+  const sc = Math.min(W / w, H / h);
+  const dw = Math.floor(w * sc + 0.5), dh = Math.floor(h * sc + 0.5);
+  const ox = Math.trunc((W - dw) / 2), oy = Math.trunc((H - dh) / 2);
+  out.fill((10 << 16) | (10 << 8) | 12);
+  for (let y = 0; y < dh; y++) {
+    const sy = (y + 0.5) / sc - 0.5;
+    const y0 = sy < 0 ? 0 : Math.floor(sy), y1 = y0 + 1 < h ? y0 + 1 : h - 1;
+    let fy = sy - y0; if (fy < 0) fy = 0;
+    for (let x = 0; x < dw; x++) {
+      const sx = (x + 0.5) / sc - 0.5;
+      const x0 = sx < 0 ? 0 : Math.floor(sx), x1 = x0 + 1 < w ? x0 + 1 : w - 1;
+      let fx = sx - x0; if (fx < 0) fx = 0;
+      const c3 = [0, 0, 0];
+      for (let k = 0; k < 3; k++) {
+        const a = src[(y0 * w + x0) * 4 + k] * (1 - fx) + src[(y0 * w + x1) * 4 + k] * fx;
+        const b = src[(y1 * w + x0) * 4 + k] * (1 - fx) + src[(y1 * w + x1) * 4 + k] * fx;
+        c3[k] = Math.floor(a * (1 - fy) + b * fy + 0.5);
+      }
+      out[(oy + y) * W + ox + x] = (c3[0] << 16) | (c3[1] << 8) | c3[2];
+    }
+  }
+  return out;
+}
+
+/* One frame of the splash, as splash_frame(): the first `rows` lines, the
+ * rest in the background colour, and a 2-line beam at the edge. */
+function drawSplash(scr, img, rows) {
+  const bg = img[0];
+  const lum = Math.trunc(((bg >> 16 & 255) * 3 + (bg >> 8 & 255) * 6 + (bg & 255)) / 10);
+  const beam = lum > 128 ? 0x000000 : 0xffffff;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) scr.p[y * W + x] = y < rows ? img[y * W + x] : bg;
+  for (let y = rows; y < rows + 2 && y < H; y++)
+    for (let x = 0; x < W; x++) { scr.p[y * W + x] = img[y * W + x]; scr.blend(x, y, beam, 110); }
+}
+
+/* The panel shows RGB565: the kernel keeps the top 5/6/5 bits of each channel. */
+function to565(c) {
+  const r = (c >> 16 & 255) >> 3, g = (c >> 8 & 255) >> 2, b = (c & 255) >> 3;
+  return (((r << 3) | (r >> 2)) << 16) | (((g << 2) | (g >> 4)) << 8) | ((b << 3) | (b >> 2));
+}
+const hex = c => "#" + c.toString(16).padStart(6, "0").toUpperCase();
+
+/* =====================================================================
+ * Settings: the fields, their help, the themes, import and export.
+ * ===================================================================== */
+const BEHAVIOUR = [
+  ["TIMEOUT", 0, 600, "Seconds the menu waits, without any input, before it starts the system on screen. 0 waits forever."],
+  ["TIMEOUT_BROWSE", 0, 600, "The same wait once the encoder has been turned, to leave more time while browsing. Never shorter than TIMEOUT."],
+  ["BEEP", 0, 100, "Level of the beeps in the last 5 seconds of the countdown, 1–100. They also follow the Main Volume knob. 0 switches them off, and SampleBoot then leaves the audio alone (no click when the menu appears)."],
+  ["GRACE", 15, 600, "Seconds a system gets to start. If none is running by then, the stock Akai app is started instead."],
+];
+const SPLASH_HELP = "The picture shown for a moment at power-on, before the menu. It appears line by line, as on an old screen. “custom” shows your own 320×240 image: put it in autorun/sampleboot/ as splash-custom.png.";
+const SPLASH_TIME_HELP = "Seconds the splash stays on screen, 1–10. Turning or pushing the encoder skips it.";
+const SPLASH_CHOICES = ["dark", "light", "off", "custom"];
+const STYLE = [
+  ["Top bar", [
+    ["TOP_BAR_BG", "c", "Background of the bar."],
+    ["TOP_BAR_OPACITY", "o", "How much the background covers the image under it: 0 invisible, 100 solid."],
+    ["TOP_BAR_LINE", "c", "Line along the lower edge of the bar."],
+    ["TOP_BAR_TITLE", "c", "The word “SampleBoot”."],
+    ["TOP_BAR_COUNTDOWN", "c", "“Auto start in 10 s”."],
+  ]],
+  ["Bottom bar (also on the “Starting” screen)", [
+    ["BOTTOM_BAR_BG", "c", "Background of the bar."],
+    ["BOTTOM_BAR_OPACITY", "o", "How much the background covers the image under it: 0 invisible, 100 solid."],
+    ["BOTTOM_BAR_LINE", "c", "Line along the upper edge of the bar."],
+    ["BOTTOM_BAR_NAME", "c", "Name of the system, and “Starting …”."],
+    ["BOTTOM_BAR_INFO", "c", "“1 / 10 · turn to browse · push to start”."],
+    ["BOTTOM_BAR_ARROWS", "c", "The left and right arrows."],
+  ]],
+  ["Title screen (a system without its own image)", [
+    ["TEMPLATE_BG", "c", "Background of the whole screen."],
+    ["TEMPLATE_TEXT", "c", "The name in the middle."],
+    ["TEMPLATE_SUBTEXT", "c", "The second line, e.g. “Original firmware 1.3.0.12”."],
+  ]],
+  ["Switch-off question (POWER pressed in the menu)", [
+    ["POPUP_SHADE", "c", "Colour laid over the menu behind the box."],
+    ["POPUP_SHADE_OPACITY", "o", "How much that colour covers the menu: 0 invisible, 100 solid."],
+    ["POPUP_BG", "c", "Background of the box."],
+    ["POPUP_BORDER", "c", "Border of the box."],
+    ["POPUP_TITLE", "c", "“Switch off the MPC?”."],
+    ["POPUP_TEXT", "c", "The two instructions."],
+    ["POPUP_INFO", "c", "“Back to the menu in 10 s”."],
+  ]],
+  ["“Switching off…” screen", [
+    ["SWITCHOFF_BG", "c", "Background of the screen."],
+    ["SWITCHOFF_TEXT", "c", "The text."],
+  ]],
+];
+const COLOUR_KEYS = STYLE.flatMap(g => g[1].map(f => f[0]));
+
+/* Same reading rules as SampleBoot: KEY=value or KEY="value", # comments. */
+function parseConf(text) {
+  const vals = {}, other = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.replace(/^﻿/, "");
+    const m = line.match(/^\s*([A-Z0-9_]+)=(?:"([^"]*)"|'([^']*)'|(\S*))/);   // as the shell: # inside a word is no comment
+    if (!m) continue;
+    const v = m[2] ?? m[3] ?? m[4] ?? "";
+    vals[m[1]] = v;
+  }
+  return vals;
+}
+const ORIGINAL = parseConf(ORIGINAL_CONF);
+const KNOWN = new Set(Object.keys(ORIGINAL));
+
+const THEMES = {
+  "Original": {},
+  "Blue & Gold": {
+    TOP_BAR_BG: "#102A5C", TOP_BAR_OPACITY: "100", TOP_BAR_LINE: "#FFC000", TOP_BAR_TITLE: "#FFC000", TOP_BAR_COUNTDOWN: "#9FD3FF",
+    BOTTOM_BAR_BG: "#102A5C", BOTTOM_BAR_OPACITY: "100", BOTTOM_BAR_LINE: "#FFC000", BOTTOM_BAR_NAME: "#FFC000", BOTTOM_BAR_INFO: "#9FD3FF", BOTTOM_BAR_ARROWS: "#FFC000",
+    TEMPLATE_BG: "#0B1A33", TEMPLATE_TEXT: "#FFFFFF", TEMPLATE_SUBTEXT: "#9FD3FF",
+    POPUP_SHADE: "#000000", POPUP_SHADE_OPACITY: "70", POPUP_BG: "#102A5C", POPUP_BORDER: "#FFC000", POPUP_TITLE: "#FFC000", POPUP_TEXT: "#FFFFFF", POPUP_INFO: "#9FD3FF",
+    SWITCHOFF_BG: "#0B1A33", SWITCHOFF_TEXT: "#FFC000",
+  },
+  "High Contrast": {
+    TOP_BAR_BG: "#000000", TOP_BAR_OPACITY: "100", TOP_BAR_LINE: "#FFFFFF", TOP_BAR_TITLE: "#FFFFFF", TOP_BAR_COUNTDOWN: "#FFFF00",
+    BOTTOM_BAR_BG: "#000000", BOTTOM_BAR_OPACITY: "100", BOTTOM_BAR_LINE: "#FFFFFF", BOTTOM_BAR_NAME: "#FFFFFF", BOTTOM_BAR_INFO: "#FFFFFF", BOTTOM_BAR_ARROWS: "#FFFF00",
+    TEMPLATE_BG: "#000000", TEMPLATE_TEXT: "#FFFFFF", TEMPLATE_SUBTEXT: "#FFFF00",
+    POPUP_SHADE: "#000000", POPUP_SHADE_OPACITY: "90", POPUP_BG: "#000000", POPUP_BORDER: "#FFFFFF", POPUP_TITLE: "#FFFFFF", POPUP_TEXT: "#FFFFFF", POPUP_INFO: "#FFFF00",
+    SWITCHOFF_BG: "#000000", SWITCHOFF_TEXT: "#FFFFFF",
+  },
+  "Green Terminal": {
+    TOP_BAR_BG: "#001A00", TOP_BAR_OPACITY: "85", TOP_BAR_LINE: "#00FF41", TOP_BAR_TITLE: "#00FF41", TOP_BAR_COUNTDOWN: "#00B32C",
+    BOTTOM_BAR_BG: "#001A00", BOTTOM_BAR_OPACITY: "85", BOTTOM_BAR_LINE: "#00FF41", BOTTOM_BAR_NAME: "#00FF41", BOTTOM_BAR_INFO: "#00B32C", BOTTOM_BAR_ARROWS: "#00FF41",
+    TEMPLATE_BG: "#000000", TEMPLATE_TEXT: "#00FF41", TEMPLATE_SUBTEXT: "#00B32C",
+    POPUP_SHADE: "#000000", POPUP_SHADE_OPACITY: "80", POPUP_BG: "#001A00", POPUP_BORDER: "#00FF41", POPUP_TITLE: "#00FF41", POPUP_TEXT: "#00FF41", POPUP_INFO: "#00B32C",
+    SWITCHOFF_BG: "#000000", SWITCHOFF_TEXT: "#00FF41",
+  },
+  "Calculator LCD": {
+    TOP_BAR_BG: "#9EAD86", TOP_BAR_OPACITY: "92", TOP_BAR_LINE: "#2B3326", TOP_BAR_TITLE: "#1E241B", TOP_BAR_COUNTDOWN: "#3D4836",
+    BOTTOM_BAR_BG: "#9EAD86", BOTTOM_BAR_OPACITY: "92", BOTTOM_BAR_LINE: "#2B3326", BOTTOM_BAR_NAME: "#1E241B", BOTTOM_BAR_INFO: "#3D4836", BOTTOM_BAR_ARROWS: "#1E241B",
+    TEMPLATE_BG: "#9EAD86", TEMPLATE_TEXT: "#1E241B", TEMPLATE_SUBTEXT: "#3D4836",
+    POPUP_SHADE: "#2B3326", POPUP_SHADE_OPACITY: "60", POPUP_BG: "#9EAD86", POPUP_BORDER: "#1E241B", POPUP_TITLE: "#1E241B", POPUP_TEXT: "#1E241B", POPUP_INFO: "#3D4836",
+    SWITCHOFF_BG: "#9EAD86", SWITCHOFF_TEXT: "#1E241B",
+  },
+  "Synthwave": {
+    TOP_BAR_BG: "#1A0633", TOP_BAR_OPACITY: "80", TOP_BAR_LINE: "#FF2E97", TOP_BAR_TITLE: "#FF71CE", TOP_BAR_COUNTDOWN: "#01CDFE",
+    BOTTOM_BAR_BG: "#1A0633", BOTTOM_BAR_OPACITY: "80", BOTTOM_BAR_LINE: "#FF2E97", BOTTOM_BAR_NAME: "#FFFFFF", BOTTOM_BAR_INFO: "#01CDFE", BOTTOM_BAR_ARROWS: "#FF71CE",
+    TEMPLATE_BG: "#12002B", TEMPLATE_TEXT: "#FF71CE", TEMPLATE_SUBTEXT: "#01CDFE",
+    POPUP_SHADE: "#12002B", POPUP_SHADE_OPACITY: "75", POPUP_BG: "#1A0633", POPUP_BORDER: "#FF2E97", POPUP_TITLE: "#FF71CE", POPUP_TEXT: "#FFFFFF", POPUP_INFO: "#01CDFE",
+    SWITCHOFF_BG: "#12002B", SWITCHOFF_TEXT: "#FF71CE",
+  },
+};
+
+let values = { ...ORIGINAL };
+let extraLines = [];            // unknown KEY= lines from a pasted file, kept at the end
+
+function validColour(v) { return /^#?[0-9A-Fa-f]{6}$/.test(v.trim()); }
+function normColour(v) { v = v.trim().toUpperCase(); return v.startsWith("#") ? v : "#" + v; }
+function themeObject() {
+  const th = {};
+  for (const k of COLOUR_KEYS) {
+    const v = values[k], d = ORIGINAL[k];
+    if (k.endsWith("_OPACITY")) { const n = parseInt(v, 10); th[k] = Number.isInteger(n) && n >= 0 && n <= 100 ? n : parseInt(d, 10); }
+    else th[k] = parseInt((validColour(v) ? normColour(v) : d).slice(1), 16);
+  }
+  return th;
+}
+
+/* ---- UI: fields ---- */
+const fieldEls = {};
+function makeField(container, key, kind, help, min, max) {
+  const div = document.createElement("div");
+  div.className = "field";
+  div.innerHTML = `<div class="key">${key}</div><div class="ctl"></div><div class="help"></div><div class="err"></div>`;
+  div.querySelector(".help").textContent = help;
+  const ctl = div.querySelector(".ctl");
+  if (kind === "c") {
+    const picker = document.createElement("input"); picker.type = "color";
+    const text = document.createElement("input"); text.type = "text"; text.className = "hex"; text.maxLength = 7;
+    const sw = document.createElement("span"); sw.className = "swatch"; sw.title = "Colour on the MPC panel";
+    const mpc = document.createElement("span"); mpc.className = "mpc";
+    ctl.append(picker, text, sw, mpc);
+    picker.addEventListener("input", () => { values[key] = picker.value.toUpperCase(); sync(key); update(); });
+    text.addEventListener("input", () => { values[key] = text.value; sync(key, true); update(); });
+    fieldEls[key] = { div, kind, picker, text, sw, mpc };
+  } else if (kind === "s") {
+    const sel = document.createElement("select");
+    for (const o of SPLASH_CHOICES) { const op = document.createElement("option"); op.value = op.textContent = o; sel.append(op); }
+    ctl.append(sel);
+    sel.addEventListener("change", () => { values[key] = sel.value; sync(key); update(); playSplash(); });
+    fieldEls[key] = { div, kind, sel };
+  } else {
+    const range = kind === "o" ? document.createElement("input") : null;
+    if (range) { range.type = "range"; range.min = 0; range.max = 100; ctl.append(range); }
+    const num = document.createElement("input"); num.type = "number";
+    num.min = kind === "o" ? 0 : min; num.max = kind === "o" ? 100 : max;
+    ctl.append(num);
+    if (range) range.addEventListener("input", () => { values[key] = range.value; sync(key); update(); });
+    num.addEventListener("input", () => { values[key] = num.value; sync(key, true); update(); });
+    fieldEls[key] = { div, kind, range, num, min: kind === "o" ? 0 : min, max: kind === "o" ? 100 : max };
+  }
+  container.append(div);
+}
+function sync(key, fromText) {
+  const e = fieldEls[key], v = (values[key] ?? "").toString();
+  if (!e) return;
+  if (e.kind === "s") {
+    const ok = /^[A-Za-z0-9._-]+$/.test(v);
+    if (ok && ![...e.sel.options].some(o => o.value === v)) {
+      const op = document.createElement("option"); op.value = op.textContent = v; e.sel.append(op);
+    }
+    e.div.classList.toggle("bad", !ok);
+    e.div.querySelector(".err").textContent = ok ? "" : "Use dark, light, off or a simple name. The original value is used meanwhile.";
+    if (ok) e.sel.value = v;
+    return;
+  }
+  if (e.kind === "c") {
+    const ok = validColour(v);
+    e.div.classList.toggle("bad", !ok);
+    e.div.querySelector(".err").textContent = ok ? "" : "Use #RRGGBB, e.g. #FF0000. The original value is used meanwhile.";
+    if (ok) {
+      const c = parseInt(normColour(v).slice(1), 16), m = to565(c);
+      e.picker.value = normColour(v).toLowerCase();
+      e.sw.style.background = hex(m);
+      e.mpc.textContent = "MPC " + hex(m);
+    }
+    if (!fromText) e.text.value = ok ? normColour(v) : v;
+  } else {
+    const n = Number(v), ok = v !== "" && Number.isInteger(n) && n >= e.min && n <= e.max;
+    e.div.classList.toggle("bad", !ok);
+    e.div.querySelector(".err").textContent = ok ? "" : `A whole number from ${e.min} to ${e.max}. The original value is used meanwhile.`;
+    if (e.range && ok) e.range.value = n;
+    if (!fromText) e.num.value = v;
+  }
+}
+function syncAll() { for (const k of Object.keys(fieldEls)) sync(k); }
+
+function buildFields() {
+  const b = document.getElementById("behaviour");
+  for (const [k, min, max, help] of BEHAVIOUR) makeField(b, k, "n", help, min, max);
+  const sp = document.getElementById("splashCard");
+  makeField(sp, "SPLASH", "s", SPLASH_HELP);
+  makeField(sp, "SPLASH_TIME", "n", SPLASH_TIME_HELP, 1, 10);
+  const st = document.getElementById("style");
+  for (const [title, fields] of STYLE) {
+    const card = document.createElement("div"); card.className = "card";
+    const h = document.createElement("h3"); h.textContent = title; h.style.marginTop = "0";
+    card.append(h);
+    for (const [k, kind, help] of fields) makeField(card, k, kind, help);
+    st.append(card);
+  }
+}
+
+/* ---- output: the original file with the values put in, comments kept ---- */
+function behaviourValue(k) {
+  const e = BEHAVIOUR.find(x => x[0] === k), v = values[k], n = Number(v);
+  return v !== "" && Number.isInteger(n) && n >= e[1] && n <= e[2] ? String(n) : ORIGINAL[k];
+}
+function splashValue() { const v = values.SPLASH ?? ""; return /^[A-Za-z0-9._-]+$/.test(v) ? v : ORIGINAL.SPLASH; }
+function splashTime() {
+  const v = values.SPLASH_TIME, n = Number(v);
+  return v !== "" && Number.isInteger(n) && n >= 1 && n <= 10 ? n : Number(ORIGINAL.SPLASH_TIME);
+}
+function outputText() {
+  const th = themeObject();
+  const lines = ORIGINAL_CONF.replace(/\s+$/, "").split("\n").map(line => {
+    const m = line.match(/^(\s*)([A-Z0-9_]+)=("[^"]*"|'[^']*'|\S*)(.*)$/);
+    if (!m) return line;
+    const [, pre, key, oldv, rest] = m;
+    let v;
+    if (BEHAVIOUR.some(x => x[0] === key)) v = behaviourValue(key);
+    else if (key === "SPLASH") v = '"' + splashValue() + '"';
+    else if (key === "SPLASH_TIME") v = String(splashTime());
+    else if (key in th) v = key.endsWith("_OPACITY") ? String(th[key]) : '"' + hex(th[key]) + '"';
+    else return line;
+    /* keep the comments in their column */
+    const sp = rest.match(/^ */)[0].length;
+    const gap = rest.trim() ? " ".repeat(Math.max(1, sp + oldv.length - v.length)) : "";
+    return pre + key + "=" + v + gap + rest.trimStart();
+  });
+  if (extraLines.length) lines.push("", "# ---- Other settings, kept from your file ----", ...extraLines);
+  return lines.join("\n") + "\n";
+}
+
+/* ---- previews ---- */
+const SCREENS = [
+  ["splash", "Splash screen (at power-on)"],
+  ["menuTitle", "Menu – a system without an image (title screen)"],
+  ["menuImage", "Menu – a system with its image"],
+  ["confirm", "Switch-off question (POWER pressed)"],
+  ["starting", "Starting the chosen system"],
+  ["off", "Switching off"],
+];
+const canvases = {};
+let testPix = null;
+function buildScreens() {
+  const box = document.getElementById("screens");
+  for (const [id, cap] of SCREENS) {
+    const fig = document.createElement("figure");
+    const fc = document.createElement("figcaption"); fc.textContent = cap;
+    const cv = document.createElement("canvas"); cv.width = W; cv.height = H; cv.className = "screen";
+    fig.append(fc, cv); box.append(fig);
+    canvases[id] = cv;
+  }
+}
+function paint(id, scr) {
+  const cv = canvases[id], cx = cv.getContext("2d"), img = cx.createImageData(W, H), q = document.getElementById("rgb565").checked;
+  for (let i = 0; i < W * H; i++) {
+    const c = q ? to565(scr.p[i]) : scr.p[i];
+    img.data[i * 4] = c >> 16 & 255; img.data[i * 4 + 1] = c >> 8 & 255; img.data[i * 4 + 2] = c & 255; img.data[i * 4 + 3] = 255;
+  }
+  cx.putImageData(img, 0, 0);
+}
+function update() {
+  const th = themeObject();
+  const t = behaviourValue("TIMEOUT"), countdown = Number(t) > 0 ? Number(t) : -1;
+  const n = 10;
+  const stock = { stock: true, fw: "1.3.0.12", pix: null };
+  const name = document.getElementById("osname").value || "CustomOS v1.0";
+  const os = { label: name, pix: testPix };
+  let s;
+  s = new Screen(); drawMenu(s, th, stock, 0, n, countdown); paint("menuTitle", s);
+  s = new Screen(); drawMenu(s, th, os, 2, n, countdown); paint("menuImage", s);
+  s = new Screen(); drawConfirm(s, th, os, 2, n, CONFIRM_S); paint("confirm", s);
+  s = new Screen(); drawStarting(s, th, os); paint("starting", s);
+  s = new Screen(); drawMessage(s, th, "Switching off…"); paint("off", s);
+  if (!splashTimer) paintSplash(H);
+  document.getElementById("output").value = outputText();
+}
+
+/* ---- splash preview ---- */
+const splashPix = {};
+let splashTimer = 0;
+function paintSplash(rows) {
+  const s = new Screen(), name = splashValue(), img = splashPix[name];
+  if (name === "off") {
+    s.clear(0x000000);
+    textCenter(s, F.label, W / 2, H / 2 + 5, "No splash: the menu appears at once", W - 24, 0x8a8a94);
+  } else if (!img) {
+    s.clear(0x000000);
+    textCenter(s, F.label, W / 2, H / 2 + 5, `Your image: splash-${name}.png`, W - 24, 0x8a8a94);
+  } else drawSplash(s, img, rows);
+  paint("splash", s);
+}
+function playSplash() {
+  cancelAnimationFrame(splashTimer); splashTimer = 0;
+  const name = splashValue();
+  if (!splashPix[name]) { paintSplash(H); return; }
+  const t0 = performance.now();
+  const step = () => {
+    const t = (performance.now() - t0) / 1000;
+    const rows = t >= SPLASH_REVEAL ? H : Math.trunc(t / SPLASH_REVEAL * H);
+    paintSplash(rows);
+    splashTimer = rows < H ? requestAnimationFrame(step) : 0;
+  };
+  step();
+}
+function loadSplashes() {
+  for (const [name, data] of Object.entries(SPLASHES)) {
+    const img = new Image();
+    img.onload = () => { splashPix[name] = fitImage(img); if (name === splashValue()) playSplash(); };
+    img.src = data;
+  }
+}
+document.getElementById("replayBtn").addEventListener("click", playSplash);
+
+/* ---- test images ---- */
+function selectImage(i, el) {
+  document.querySelectorAll(".thumb").forEach(t => t.classList.remove("sel"));
+  el.classList.add("sel");
+  if (i < 0) { testPix = null; update(); return; }
+  const img = new Image();
+  img.onload = () => { testPix = fitImage(img); update(); };
+  img.src = IMAGES[i].data;
+}
+function buildThumbs() {
+  const box = document.getElementById("thumbs");
+  IMAGES.forEach((im, i) => {
+    const t = document.createElement("div"); t.className = "thumb"; t.style.backgroundImage = `url(${im.data})`;
+    t.textContent = im.name; t.title = im.name;
+    t.addEventListener("click", () => selectImage(i, t));
+    box.append(t);
+    if (i === 0) setTimeout(() => selectImage(0, t), 0);
+  });
+  const none = document.createElement("div"); none.className = "thumb none"; none.textContent = "No image";
+  none.title = "Show the title screen instead";
+  none.addEventListener("click", () => selectImage(-1, none));
+  box.append(none);
+  document.getElementById("upload").addEventListener("change", e => {
+    const file = e.target.files[0]; if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const t = document.createElement("div"); t.className = "thumb"; t.style.backgroundImage = `url(${r.result})`;
+      t.textContent = "Yours"; t.title = file.name;
+      const idx = IMAGES.push({ name: file.name, data: r.result }) - 1;
+      t.addEventListener("click", () => selectImage(idx, t));
+      box.insertBefore(t, none);
+      selectImage(idx, t);
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+/* ---- import, themes, reset, copy, download ---- */
+function loadValues(obj) {
+  values = { ...ORIGINAL };
+  for (const [k, v] of Object.entries(obj)) if (KNOWN.has(k)) values[k] = v;
+  syncAll(); update();
+}
+document.getElementById("importBtn").addEventListener("click", () => {
+  const text = document.getElementById("importText").value;
+  const msg = document.getElementById("importMsg");
+  if (!text.trim()) { msg.textContent = "Nothing pasted: starting from the original values."; loadValues({}); return; }
+  const vals = parseConf(text);
+  const known = Object.keys(vals).filter(k => KNOWN.has(k));
+  extraLines = text.split(/\r?\n/).filter(l => { const m = l.match(/^\s*([A-Z0-9_]+)=/); return m && !KNOWN.has(m[1]); });
+  loadValues(vals);
+  msg.textContent = `${known.length} settings loaded` + (extraLines.length ? `, ${extraLines.length} other line(s) kept at the end` : "") + ".";
+});
+document.getElementById("resetBtn").addEventListener("click", () => {
+  extraLines = []; document.getElementById("importText").value = "";
+  document.getElementById("importMsg").textContent = "Original values.";
+  loadValues({});
+});
+function buildPresets() {
+  const box = document.getElementById("presets");
+  for (const [name, t] of Object.entries(THEMES)) {
+    const b = document.createElement("button"); b.textContent = name;
+    b.addEventListener("click", () => {
+      for (const k of COLOUR_KEYS) values[k] = (name === "Original" ? ORIGINAL[k] : t[k] ?? ORIGINAL[k]);
+      syncAll(); update();
+    });
+    box.append(b);
+  }
+}
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  const ta = document.getElementById("output");
+  try { await navigator.clipboard.writeText(ta.value); }
+  catch { ta.select(); document.execCommand("copy"); }
+  const c = document.getElementById("copied"); c.style.display = "inline"; setTimeout(() => c.style.display = "none", 1500);
+});
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const blob = new Blob([document.getElementById("output").value], { type: "text/plain" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "sampleboot.conf";
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+document.getElementById("rgb565").addEventListener("change", update);
+document.getElementById("osname").addEventListener("input", update);
+document.getElementById("zoom").addEventListener("change", e => {
+  document.getElementById("screens").style.setProperty("--w", (W * Number(e.target.value)) + "px");
+});
+
+buildScreens(); buildFields(); buildPresets(); buildThumbs(); syncAll(); update(); loadSplashes();
+</script>
+</body>
+</html>
