@@ -7,6 +7,13 @@
 
 <p align="center"><b>A boot selector for the Akai MPC Sample</b></p>
 
+<p align="center">
+  <a href="https://sampleboot.com"><b>sampleboot.com</b></a> ·
+  <a href="https://github.com/pxcm/SampleBoot/releases/latest">Download</a> ·
+  <a href="https://sampleboot.com/theme-editor.html">Theme editor online</a> ·
+  <a href="https://ko-fi.com/paxicom">Support on Ko-fi</a>
+</p>
+
 ![SampleBoot on the MPC Sample: the stock firmware and two custom OSes in the boot menu](docs/images/sampleboot-hero.png)
 
 SampleBoot is a boot menu for the **Akai MPC Sample**. Custom OSes for the MPC
