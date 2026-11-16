@@ -161,7 +161,7 @@ out when something is plugged in. Their volume follows the Main Volume knob.
 | `TIMEOUT_BROWSE` | 20 | The same, once the encoder has been turned |
 | `BEEP` | 100 | Level of the countdown beeps, 1–100, scaled by Main Volume (0 = no beeps) |
 | `GRACE` | 60 | Seconds a system gets to start before the stock app starts instead |
-| `IN_PLACE` | 1 | 1: each OS runs from `autorun/`, as if it were alone on the card (needed, for example, for SampQOL's 16 USB outputs). 0: from `autorun/mods/<name>` |
+| `ROOT_FILES` | `"mpcqol.conf"` | Settings files an OS keeps at the card root and reads from the folder above its own; SampleBoot shows them in `autorun/mods/` too (SampQOL's 16 USB outputs need this) |
 | `SPLASH` | `"dark"` | Splash screen: `"dark"`, `"light"`, `"off"`, or a name of your own to show `splash-<name>.png` (320×240) from `autorun/sampleboot/` |
 | `SPLASH_TIME` | 2 | Seconds the splash stays on screen; turning or pushing the encoder skips it |
 

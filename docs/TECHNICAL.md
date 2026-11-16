@@ -53,14 +53,17 @@ and using it, see the [README](../README.md).
   (Melodee, SampQOL OS). Absolute paths and `..` are refused.
   `sampleboot-ui --script DIR` prints it.
 - The script then runs the chosen OS's own start script, unchanged, or
-  restarts `ac50.service` for stock. With `IN_PLACE=1` (the default) it first
-  binds the OS's folder over the card's `autorun` (`mount --bind
-  autorun/mods/<name> autorun`), so the OS runs from the path it would have
-  without SampleBoot. Some OSes work out other paths from their own folder:
-  SampQOL 0.3.0 reads `mpcqol.conf` from `${DIR%/*}`, the card root only when
-  it sits in `autorun`, and turns its 16 USB outputs on from it. The binding
-  lasts until power-off or until the card is taken out. The script's log
-  stays open across it, so `sampleboot/last-boot.log` keeps being written.
+  restarts `ac50.service` for stock. OSes find their card from their own
+  path or `/proc/mounts` (MPC Simple takes the longest mount point that holds
+  its folder), so they run from `mods/<name>/` as from the card's `autorun`.
+- One exception: SampQOL 0.3.0 keeps `mpcqol.conf` at the card root but its
+  start script reads it from `${DIR%/*}`, the folder above its own, and turns
+  its 16 USB outputs on from it. For each name in `ROOT_FILES` found at the
+  card root, the script binds that file onto `autorun/mods/<name>` (copying it
+  there the first time, to have a file to bind onto), so the OS reads and
+  writes the real one. A bind of the whole OS folder over `autorun` was tried
+  in a 1.0.1 build and dropped: it adds `<card>/autorun` to `/proc/mounts`,
+  and MPC Simple then takes that for the card root.
 
 ## Files on the card
 

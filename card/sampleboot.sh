@@ -8,8 +8,8 @@
 #    "__poweroff" when the user switched the MPC off from the menu);
 # 2. runs that folder's start script (the one its autorun.json names, as the
 #    firmware would: autorun.sh, launcher.sh, ...), or starts the stock app.
-#    With IN_PLACE=1 the folder is first bound over autorun/, so the OS runs
-#    from the place it would have without SampleBoot;
+#    Settings files that an OS keeps at the card root (ROOT_FILES) are shown
+#    in mods/ too, where it looks for them from its folder;
 # 3. if no app is running GRACE seconds later, starts the stock app.
 
 DIR=${1:?}
@@ -22,7 +22,7 @@ TIMEOUT=10          # seconds without input before the shown entry starts (0 = n
 TIMEOUT_BROWSE=20   # the same, once the encoder has been turned
 BEEP=100            # countdown beeps in the last 5 seconds: level 1-100 (scaled by Main Volume), 0 = off
 GRACE=60            # seconds a mod gets to start before falling back to stock
-IN_PLACE=1          # run each OS from autorun/ (bind mount), as if it were alone on the card
+ROOT_FILES="mpcqol.conf"   # files OSes keep at the card root and read from "the folder above their own"
 SPLASH=dark         # splash screen: dark, light, off, or <name> for splash-<name>.png
 SPLASH_TIME=2       # seconds it stays on screen
 # (the colours in sampleboot.conf are read by sampleboot-ui itself)
@@ -87,20 +87,23 @@ sync
 M="$MODS/$id"
 S=$("$RUN/sampleboot-ui" --script "$M") || { log "no start script in mods/$id"; stock; }
 
-# Run the OS from where it would be without SampleBoot: its folder is bound
-# over autorun/, so whatever it works out from its own path is as usual. (For
-# example SampQOL reads its settings from "the folder above its own", the card
-# root, and turns its 16 USB outputs on from there.) The binding lasts until
-# power-off or until the card is taken out; nothing on the card changes. This
-# log stays open, so it keeps being written to sampleboot/last-boot.log.
-if [ "$IN_PLACE" = 1 ]; then
-    if mount --bind "$M" "$DIR" 2>/dev/null; then
-        log "mods/$id bound over autorun/"
-        M="$DIR"
-    else
-        log "could not bind mods/$id over autorun/: running it from mods/"
-    fi
-fi
+# Some OSes keep a settings file at the card root and read it from "the
+# folder above their own", which is the card root only when they sit in
+# autorun/. SampQOL 0.3.0 does so with mpcqol.conf, and turns its 16 USB
+# outputs on from it. Each file of ROOT_FILES found at the card root is shown
+# in mods/ too, by binding the file itself: the OS reads and writes the one at
+# the card root. (Binding the OS's whole folder over autorun/ would also do,
+# but OSes that find the card in /proc/mounts, as MPC Simple does, would then
+# take autorun/ for the card.) The binding ends at power-off; the first time,
+# a copy of the file is left in mods/ to bind onto.
+CARD=${DIR%/*}
+for f in $ROOT_FILES; do
+    [ -f "$CARD/$f" ] || continue
+    { [ -f "$MODS/$f" ] || cp "$CARD/$f" "$MODS/$f"; } 2>/dev/null &&
+        mount --bind "$CARD/$f" "$MODS/$f" 2>/dev/null &&
+        log "$f: the card root's file shown in mods/" ||
+        log "$f: could not show the card root's file in mods/"
+done
 log "running mods/$id/$S"
 /bin/sh "$M/$S" 2>&1
 log "autorun of $id returned, waiting for the app"
