@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.1
+
+**Fixed**
+- SampQOL OS 0.3.0's 16 USB audio outputs did not appear when SampQOL was
+  started from SampleBoot. SampQOL reads its settings from the folder above
+  its own, which is the card root only when it sits in `autorun/`. Each OS
+  now runs from `autorun/`, as if it were alone on the card: SampleBoot binds
+  its folder over `autorun/` before starting it. Nothing on the card is moved,
+  and the binding ends at power-off. Other OSes that work out paths from
+  their own folder benefit too.
+
+**Added**
+- `IN_PLACE` setting (default 1). Set it to 0 to run each OS from
+  `autorun/mods/<name>` as in 1.0.0.
+
 ## 1.0.0 – first public release
 
 Tested on the MPC Sample with firmware 1.3.0 (1.3.0.12), with Melodee 0.1.0,

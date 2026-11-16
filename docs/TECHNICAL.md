@@ -53,9 +53,14 @@ and using it, see the [README](../README.md).
   (Melodee, SampQOL OS). Absolute paths and `..` are refused.
   `sampleboot-ui --script DIR` prints it.
 - The script then runs the chosen OS's own start script, unchanged, or
-  restarts `ac50.service` for stock. OSes find their card from their own
-  path or `/proc/mounts`, so they run from `mods/<name>/` as they would from
-  the card's `autorun`.
+  restarts `ac50.service` for stock. With `IN_PLACE=1` (the default) it first
+  binds the OS's folder over the card's `autorun` (`mount --bind
+  autorun/mods/<name> autorun`), so the OS runs from the path it would have
+  without SampleBoot. Some OSes work out other paths from their own folder:
+  SampQOL 0.3.0 reads `mpcqol.conf` from `${DIR%/*}`, the card root only when
+  it sits in `autorun`, and turns its 16 USB outputs on from it. The binding
+  lasts until power-off or until the card is taken out. The script's log
+  stays open across it, so `sampleboot/last-boot.log` keeps being written.
 
 ## Files on the card
 

@@ -79,7 +79,7 @@ stay on the same card.
 
 **Back up your SD card first.**
 
-1. Download `SampleBoot-1.0.0.zip` from
+1. Download `SampleBoot-1.0.1.zip` from
    [Releases](../../releases) and unzip it.
 2. Copy its `autorun` folder to the top level of the SD card.
    If the card already has an `autorun` folder from an OS, move that folder
@@ -161,6 +161,7 @@ out when something is plugged in. Their volume follows the Main Volume knob.
 | `TIMEOUT_BROWSE` | 20 | The same, once the encoder has been turned |
 | `BEEP` | 100 | Level of the countdown beeps, 1–100, scaled by Main Volume (0 = no beeps) |
 | `GRACE` | 60 | Seconds a system gets to start before the stock app starts instead |
+| `IN_PLACE` | 1 | 1: each OS runs from `autorun/`, as if it were alone on the card (needed, for example, for SampQOL's 16 USB outputs). 0: from `autorun/mods/<name>` |
 | `SPLASH` | `"dark"` | Splash screen: `"dark"`, `"light"`, `"off"`, or a name of your own to show `splash-<name>.png` (320×240) from `autorun/sampleboot/` |
 | `SPLASH_TIME` | 2 | Seconds the splash stays on screen; turning or pushing the encoder skips it |
 

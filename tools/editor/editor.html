@@ -372,6 +372,7 @@ const BEHAVIOUR = [
   ["TIMEOUT_BROWSE", 0, 600, "The same wait once the encoder has been turned, to leave more time while browsing. Never shorter than TIMEOUT."],
   ["BEEP", 0, 100, "Level of the beeps in the last 5 seconds of the countdown, 1–100. They also follow the Main Volume knob. 0 switches them off, and SampleBoot then leaves the audio alone (no click when the menu appears)."],
   ["GRACE", 15, 600, "Seconds a system gets to start. If none is running by then, the stock Akai app is started instead."],
+  ["IN_PLACE", 0, 1, "1: each system runs from autorun/, as if it were alone on the card, so settings it keeps next to its folder (SampQOL's 16 USB outputs, for example) work as usual. Nothing on the card is moved. 0: systems run from autorun/mods/<name>."],
 ];
 const SPLASH_HELP = "The picture shown for a moment at power-on, before the menu. It appears line by line, as on an old screen. “custom” shows your own 320×240 image: put it in autorun/sampleboot/ as splash-custom.png.";
 const SPLASH_TIME_HELP = "Seconds the splash stays on screen, 1–10. Turning or pushing the encoder skips it.";
