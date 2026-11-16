@@ -104,7 +104,7 @@ autorun/
   autorun.sh  autorun.json  autorun.check   SampleBoot's launcher, do not edit
   sampleboot/                               SampleBoot itself and its settings
   mods/
-    Melodee 0.2.2/       Melodee's "autorun" folder, renamed
+    Melodee 0.3.0/       Melodee's "autorun" folder, renamed
     SampQOL 0.3.0/       SampQOL's "autorun" folder, renamed
 ```
 
@@ -124,7 +124,7 @@ SampleBoot without touching your settings, and adds OSes straight from their
 release zips, top-level folders included:
 
 ```sh
-python3 tools/add_mod.py /Volumes/MPC ~/Downloads/Melodee-MPC-Sample-v0.2.2.zip
+python3 tools/add_mod.py /Volumes/MPC ~/Downloads/Melodee-MPC-Sample-v0.3.0.zip
 python3 tools/add_mod.py /Volumes/MPC some-os.zip --name "Some OS 1.0"
 python3 tools/add_mod.py /Volumes/MPC              # install or update SampleBoot only
 ```
