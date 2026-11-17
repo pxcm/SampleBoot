@@ -11,6 +11,7 @@
   <a href="https://sampleboot.com"><b>sampleboot.com</b></a> ·
   <a href="https://github.com/pxcm/SampleBoot/releases/latest">Download</a> ·
   <a href="https://sampleboot.com/theme-editor.html">Theme editor online</a> ·
+  <a href="ROADMAP.md">Roadmap</a> ·
   <a href="https://ko-fi.com/paxicom">Support on Ko-fi</a>
 </p>
 
