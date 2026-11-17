@@ -15,7 +15,7 @@
 - `ROOT_FILES` setting: the settings files to show in `autorun/mods/` this
   way. Default `"mpcqol.conf"`.
 
-**Tested** with Melodee 0.3.0 too.
+**Tested** with Melodee 0.3.0 and MPC Simple 1.0 Beta 3 too.
 
 ## 1.0.0 – first public release
 

@@ -87,7 +87,7 @@ starts from `autorun` should work. These are the ones known to work so far.
 | Stock firmware | 1.3.0 (1.3.0.12) | Tested | Akai Professional |
 | SampQOL OS | 0.1.4.7 – 0.3.0 | Tested | [beatops.io/sampqol](https://beatops.io/sampqol) |
 | Melodee | 0.1.0 – 0.3.0 | Tested | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
-| MPC Simple | 1.0 Beta 1 – Beta 2 | Tested | [mpcsimple.com](https://mpcsimple.com/) |
+| MPC Simple | 1.0 Beta 1 – Beta 3 | Tested | [mpcsimple.com](https://mpcsimple.com/) |
 | ODDFORM | 1.2.0 beta | User report | – |
 
 *Tested*: on the author's MPC Sample. *User report*: a user confirmed it works.
