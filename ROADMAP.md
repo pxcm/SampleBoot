@@ -36,13 +36,6 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   (the colour of the scan line). The theme editor and the website show the
   same animation.
 
-### Compatibility list
-
-- **Which systems work.** A section on the website and in the README listing
-  the systems that work with SampleBoot, with their versions: the ones tested
-  by the author, and the ones users report working (for example
-  ODDFORM 1.2.0 beta). To report one, open an issue or write on Reddit.
-
 ## Being evaluated
 
 - **Switch system without restarting.** Go back to the menu without switching
@@ -56,6 +49,8 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
 
 ## Done
 
+- **Compatibility list** in the README and on the website: systems tested by
+  the author and systems users report working.
 - **1.0.1:** SampQOL OS 0.3.0's 16 USB outputs work when it is started from
   SampleBoot.
 - **1.0.0:** first public release. See the [changelog](CHANGELOG.md).

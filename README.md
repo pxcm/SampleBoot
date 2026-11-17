@@ -35,6 +35,7 @@ stay on the same card.
   stock.
 - The stock Akai app is always one of the choices.
 - Tested on the MPC Sample with firmware 1.3.0 (full version number 1.3.0.12).
+  See [Works with](#works-with) for the systems known to work.
 - SampleBoot includes no OS: you download each one from its own project.
 
 ## Features
@@ -75,6 +76,24 @@ stay on the same card.
   <img src="docs/images/sampleboot-screens-1.png" alt="A system with its own image, a generated title screen, the switch-off question" width="800"><br>
   <img src="docs/images/sampleboot-screens-2.png" alt="Starting a system, switching off, another system's image" width="800">
 </p>
+
+## Works with
+
+SampleBoot runs each system's own `autorun` folder, unchanged, so any OS that
+starts from `autorun` should work. These are the ones known to work so far.
+
+| System | Versions | Checked by | From |
+|---|---|---|---|
+| Stock firmware | 1.3.0 (1.3.0.12) | Tested | Akai Professional |
+| SampQOL OS | 0.1.4.7 – 0.3.0 | Tested | [beatops.io/sampqol](https://beatops.io/sampqol) |
+| Melodee | 0.1.0 – 0.3.0 | Tested | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
+| MPC Simple | 1.0 Beta 1 – Beta 2 | Tested | [mpcsimple.com](https://mpcsimple.com/) |
+| ODDFORM | 1.2.0 beta | User report | – |
+
+*Tested*: on the author's MPC Sample. *User report*: a user confirmed it works.
+Using another system with SampleBoot? Open an
+[issue](https://github.com/pxcm/SampleBoot/issues) with its name and version,
+and it goes on the list.
 
 ## Requirements
 
