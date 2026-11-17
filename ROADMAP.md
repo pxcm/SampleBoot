@@ -36,6 +36,13 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   (the colour of the scan line). The theme editor and the website show the
   same animation.
 
+### Compatibility list
+
+- **Which systems work.** A section on the website and in the README listing
+  the systems that work with SampleBoot, with their versions: the ones tested
+  by the author, and the ones users report working (for example
+  ODDFORM 1.2.0 beta). To report one, open an issue or write on Reddit.
+
 ## Being evaluated
 
 - **Switch system without restarting.** Go back to the menu without switching
