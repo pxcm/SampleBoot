@@ -89,7 +89,7 @@ starts from `autorun` should work. These are the ones known to work so far.
 | SampQOL OS | 0.1.4.7 – 0.3.0 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
 | Melodee | 0.1.0 – 0.3.0 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
 | MPC Simple | 1.0 Beta 1 – Beta 3 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
-| MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | – |
+| MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
 | ODDFORM | 1.2.0 beta | Works | User report | | – |
 
 *Works with issues* means it starts, but something doesn't work as it does
