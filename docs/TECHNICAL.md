@@ -62,8 +62,13 @@ and using it, see the [README](../README.md).
   card root, the script binds that file onto `autorun/mods/<name>` (copying it
   there the first time, to have a file to bind onto), so the OS reads and
   writes the real one. A bind of the whole OS folder over `autorun` was tried
-  in a 1.0.1 build and dropped: it adds `<card>/autorun` to `/proc/mounts`,
-  and MPC Simple then takes that for the card root.
+  in a 1.0.1 build and dropped as the default: it adds `<card>/autorun` to
+  `/proc/mounts`, and MPC Simple then takes that for the card root.
+- That bind is still used, per OS, when the OS folder holds a file named
+  `sampleboot.inplace`: `mount --bind autorun/mods/<name> autorun`, then the
+  start script runs from `autorun/`. For OSes that take the card as the
+  parent of their own folder, like MPCTRACKER (`CARD=$(dirname "$D")`, passed
+  to its app as `--card`).
 
 ## Files on the card
 
@@ -79,6 +84,7 @@ and using it, see the [README](../README.md).
         sampleboot.txt, .png      optional name and image of the stock entry
         last                      last choice
         last-boot.log             log of the last boot
+        boot-history.log          logs of the boots before it (BOOT_HISTORY, default 10)
       mods/<name>/                one OS each: its own autorun folder, unchanged
 
 ## Building

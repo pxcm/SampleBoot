@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.0.2
+
+**Added**
+- An empty file named `sampleboot.inplace` in a system's folder makes
+  SampleBoot run it from `autorun/` itself, as if it were alone on the card
+  (its folder is bound over `autorun/` until power-off). For systems that
+  work out the card as "the folder above their own". MPCTRACKER 0.1.0 needs
+  it: without it, its file browser stays inside `autorun/mods/` and it looks
+  for its songs and samples there.
+- [Notes for OS authors](docs/OS-AUTHORS.md): how to make a system that runs
+  from SampleBoot as it does on its own.
+- `boot-history.log` in `autorun/sampleboot/` keeps the logs of the last 10
+  boots, each one headed by its date, to compare tests. `BOOT_HISTORY` sets
+  how many (0 = none).
+
+**Fixed**
+- The last line of `last-boot.log` (the system that took over, or the stock
+  app starting) could be missing when the card was read from a computer
+  through SD card access without a restart: it is now written to the card at
+  once.
+
 ## 1.0.1
 
 **Fixed**

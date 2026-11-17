@@ -64,7 +64,8 @@ stay on the same card.
 
 - If a system does not start within 60 seconds, the stock app starts instead.
 - Every audio setting it touches is put back before the chosen system starts.
-- `last-boot.log` on the card tells what happened at the last boot.
+- `last-boot.log` on the card tells what happened at the last boot, and
+  `boot-history.log` keeps the last 10 boots, each with its date.
 
 **Your look**
 
@@ -82,15 +83,18 @@ stay on the same card.
 SampleBoot runs each system's own `autorun` folder, unchanged, so any OS that
 starts from `autorun` should work. These are the ones known to work so far.
 
-| System | Versions | Checked by | From |
-|---|---|---|---|
-| Stock firmware | 1.3.0 (1.3.0.12) | Tested | Akai Professional |
-| SampQOL OS | 0.1.4.7 – 0.3.0 | Tested | [beatops.io/sampqol](https://beatops.io/sampqol) |
-| Melodee | 0.1.0 – 0.3.0 | Tested | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
-| MPC Simple | 1.0 Beta 1 – Beta 3 | Tested | [mpcsimple.com](https://mpcsimple.com/) |
-| ODDFORM | 1.2.0 beta | User report | – |
+| System | Versions | Status | Checked by | Notes | From |
+|---|---|---|---|---|---|
+| Stock firmware | 1.3.0 (1.3.0.12) | Works | Tested | | Akai Professional |
+| SampQOL OS | 0.1.4.7 – 0.3.0 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
+| Melodee | 0.1.0 – 0.3.0 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
+| MPC Simple | 1.0 Beta 1 – Beta 3 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
+| MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | – |
+| ODDFORM | 1.2.0 beta | Works | User report | | – |
 
-*Tested*: on the author's MPC Sample. *User report*: a user confirmed it works.
+*Works with issues* means it starts, but something doesn't work as it does
+without SampleBoot: the notes say what. *Tested*: on the author's MPC Sample.
+*User report*: a user confirmed it works.
 Using another system with SampleBoot? Open an
 [issue](https://github.com/pxcm/SampleBoot/issues) with its name and version,
 and it goes on the list.
@@ -106,7 +110,7 @@ and it goes on the list.
 
 **Back up your SD card first.**
 
-1. Download `SampleBoot-1.0.1.zip` from
+1. Download `SampleBoot-1.0.2.zip` from
    [Releases](../../releases) and unzip it.
 2. Copy its `autorun` folder to the top level of the SD card.
    If the card already has an `autorun` folder from an OS, move that folder
@@ -178,6 +182,16 @@ out when something is plugged in. Their volume follows the Main Volume knob.
   by itself. Without an image, a title screen with the name is shown.
 - **Stock entry:** the same files in `autorun/sampleboot/`.
 
+### Systems that need to run from `autorun/`
+
+A few systems work out where the card is from their own folder, and get it
+wrong from `autorun/mods/`: their file browser stays inside `autorun/mods/`,
+or they don't find their files. Put an empty file named `sampleboot.inplace`
+in the system's folder: SampleBoot then runs it from `autorun/` itself, as if
+it were alone on the card. Nothing on the card is moved.
+**MPCTRACKER** needs this file. If you make a system for the MPC Sample, see
+[the notes for OS authors](docs/OS-AUTHORS.md).
+
 ## Settings and colours
 
 `autorun/sampleboot/sampleboot.conf`:
@@ -188,6 +202,7 @@ out when something is plugged in. Their volume follows the Main Volume knob.
 | `TIMEOUT_BROWSE` | 20 | The same, once the encoder has been turned |
 | `BEEP` | 100 | Level of the countdown beeps, 1–100, scaled by Main Volume (0 = no beeps) |
 | `GRACE` | 60 | Seconds a system gets to start before the stock app starts instead |
+| `BOOT_HISTORY` | 10 | Boots whose logs are kept in `boot-history.log`, each with its date; 0 = none |
 | `ROOT_FILES` | `"mpcqol.conf"` | Settings files an OS keeps at the card root and reads from the folder above its own; SampleBoot shows them in `autorun/mods/` too (SampQOL's 16 USB outputs need this) |
 | `SPLASH` | `"dark"` | Splash screen: `"dark"`, `"light"`, `"off"`, or a name of your own to show `splash-<name>.png` (320×240) from `autorun/sampleboot/` |
 | `SPLASH_TIME` | 2 | Seconds the splash stays on screen; turning or pushing the encoder skips it |
@@ -226,6 +241,7 @@ and sends nothing anywhere:
 ## Troubleshooting
 
 - Read `autorun/sampleboot/last-boot.log` on the card: it describes the last boot.
+  `boot-history.log`, next to it, has the boots before, oldest first.
 - If the MPC hangs, hold POWER until it switches off, remove the card and
   rename its `autorun` folder to `autorun-off`. The MPC then starts as stock.
 - Folder names may contain spaces. If an OS does not start from such a folder,

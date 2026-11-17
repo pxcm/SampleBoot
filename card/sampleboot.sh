@@ -9,15 +9,14 @@
 # 2. runs that folder's start script (the one its autorun.json names, as the
 #    firmware would: autorun.sh, launcher.sh, ...), or starts the stock app.
 #    Settings files that an OS keeps at the card root (ROOT_FILES) are shown
-#    in mods/ too, where it looks for them from its folder;
+#    in mods/ too, where it looks for them from its folder. An OS folder with
+#    a sampleboot.inplace file runs from autorun/ itself;
 # 3. if no app is running GRACE seconds later, starts the stock app.
 
 DIR=${1:?}
 B="$DIR/sampleboot"
 MODS="$DIR/mods"
 RUN=/run/sampleboot
-exec > "$B/last-boot.log" 2>&1   # log of the last boot, readable from a computer
-
 TIMEOUT=10          # seconds without input before the shown entry starts (0 = never)
 TIMEOUT_BROWSE=20   # the same, once the encoder has been turned
 BEEP=100            # countdown beeps in the last 5 seconds: level 1-100 (scaled by Main Volume), 0 = off
@@ -25,15 +24,32 @@ GRACE=60            # seconds a mod gets to start before falling back to stock
 ROOT_FILES="mpcqol.conf"   # files OSes keep at the card root and read from "the folder above their own"
 SPLASH=dark         # splash screen: dark, light, off, or <name> for splash-<name>.png
 SPLASH_TIME=2       # seconds it stays on screen
+BOOT_HISTORY=10     # boots kept in boot-history.log (0 = none)
 # (the colours in sampleboot.conf are read by sampleboot-ui itself)
 WATCH_PROCS="MPC Sample|sample-base|mpcsimple"   # processes that mean "an app is running"
 [ -f "$B/sampleboot.conf" ] && . "$B/sampleboot.conf"
 
+# The previous boot's log goes to boot-history.log, which keeps the last
+# BOOT_HISTORY boots, oldest first, each one starting with a "=====" line.
+# (Rolled now, not at the end of a boot: a boot ends when the MPC is switched
+# off, so its last lines are only certain once the next boot starts.)
+if [ "$BOOT_HISTORY" -gt 0 ] 2>/dev/null && [ -s "$B/last-boot.log" ]; then
+    { cat "$B/boot-history.log" 2>/dev/null; cat "$B/last-boot.log"; echo; } |
+        awk -v n="$BOOT_HISTORY" '/^===== / { b++ } { line[NR] = $0; blk[NR] = b }
+            END { for (i = 1; i <= NR; i++) if (blk[i] > b - n) print line[i] }' > "$B/boot-history.tmp" &&
+        mv -f "$B/boot-history.tmp" "$B/boot-history.log"
+fi
+exec > "$B/last-boot.log" 2>&1   # log of this boot, readable from a computer
+echo "===== $(date -u '+%Y-%m-%d %H:%M:%S') UTC ====="
+
 log() { echo "$(cut -d' ' -f1 /proc/uptime) $*"; }
+# The last line of a boot is written to the card at once: the card may be
+# read from a computer (SD card access) without a restart.
+done_log() { log "$@"; sync; }
 
 stock() {
     [ -x "$RUN/sampleboot-ui" ] && "$RUN/sampleboot-ui" --volume-restore
-    log "starting the stock Akai app"
+    done_log "starting the stock Akai app"
     systemctl start ac50.service 2>/dev/null
     exit 0
 }
@@ -104,6 +120,22 @@ for f in $ROOT_FILES; do
         log "$f: the card root's file shown in mods/" ||
         log "$f: could not show the card root's file in mods/"
 done
+
+# An OS that works out the card as "the folder above its own" (MPCTRACKER
+# passes it to its app as --card) would take autorun/mods/ for the card. Such
+# an OS ships an empty file named sampleboot.inplace, or the user adds one:
+# its folder is then bound over autorun/, and it runs from where it would be
+# without SampleBoot. Not done for every OS: OSes that find the card in
+# /proc/mounts, as MPC Simple does, would take the bound autorun/ for the
+# card. The binding ends at power-off; this log stays open across it.
+if [ -e "$M/sampleboot.inplace" ]; then
+    if mount --bind "$M" "$DIR" 2>/dev/null; then
+        log "mods/$id runs from autorun/ (sampleboot.inplace)"
+        M="$DIR"
+    else
+        log "mods/$id: could not bind it over autorun/, running it from mods/"
+    fi
+fi
 log "running mods/$id/$S"
 /bin/sh "$M/$S" 2>&1
 log "autorun of $id returned, waiting for the app"
@@ -113,8 +145,8 @@ i=0
 while [ $i -lt "$GRACE" ]; do
     sleep 1
     i=$((i + 1))
-    [ $i -ge 15 ] && alive && { log "app running after $i s ($why)"; exit 0; }
+    [ $i -ge 15 ] && alive && { done_log "app running after $i s ($why)"; exit 0; }
 done
-alive && { log "app running ($why)"; exit 0; }
+alive && { done_log "app running ($why)"; exit 0; }
 log "no app after $GRACE s"
 stock

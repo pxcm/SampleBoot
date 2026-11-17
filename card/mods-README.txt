@@ -14,6 +14,11 @@ MPC's firmware reads it.
 Some OSes also come with a folder for the top level of the card (MPC Simple:
 MPC-Simple, with its models). Copy that one to the top level, next to
 autorun, as the OS's own instructions say.
+If an OS can't find its files from autorun/mods/ (for example its file
+browser stays inside autorun/mods), put an empty file named
+"sampleboot.inplace" in its folder: SampleBoot then runs it from autorun/
+itself, as if it were alone on the card. MPCTRACKER needs this.
+
 Folders starting with "." or "_" are skipped, so renaming one to
 "_Melodee 0.2.0" hides it without deleting it.
 
