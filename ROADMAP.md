@@ -47,6 +47,16 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   its zip, rename or hide entries, edit the theme on the real screen.
   Feasibility and need still to be checked.
 
+## Proposed to OS authors
+
+- **One folder for the mods' own files: `MPC-Mods/`.** At the card root,
+  next to the stock `MPC-Sample/`, each system would keep its files in its own
+  subfolder (`MPC-Mods/SampQOL/`, `MPC-Mods/MPC-Simple/`,
+  `MPC-Mods/Tracker/`…) instead of creating folders anywhere on the card. The
+  card root stays clean, and everyone knows where each system keeps its
+  things. It only works if the authors agree on it: once they do, it goes
+  into the [notes for OS authors](docs/OS-AUTHORS.md).
+
 ## Done
 
 - **Compatibility list** in the README and on the website: systems tested by
