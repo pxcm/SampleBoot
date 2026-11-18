@@ -27,6 +27,10 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
 - **SD card over USB.** Show the card to a computer over the USB cable, as the
   custom OSes do, to add, change or remove systems and files without taking
   the card out. The menu reloads when you're done.
+- **Release folders as they are.** If a system's folder has no `autorun.sh`
+  inside, SampleBoot also looks one level down, in
+  `mods/<name>/autorun/`. You can drop in the folder from a release zip
+  without moving its files around.
 
 ### Look
 
