@@ -91,6 +91,7 @@ starts from `autorun` should work. These are the ones known to work so far.
 | MPC Simple | 1.0 Beta 1 – Beta 3 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
 | MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
 | ODDFORM | 1.2.0 beta | Works | User report | | – |
+| Rhythmer OS | 0.2.0 | Works | User report | Keep its `Rhythmer` folder at the card root | [jazzyrhythmer.github.io/mpc-sample](https://jazzyrhythmer.github.io/mpc-sample/) |
 
 *Works with issues* means it starts, but something doesn't work as it does
 without SampleBoot: the notes say what. *Tested*: on the author's MPC Sample.
