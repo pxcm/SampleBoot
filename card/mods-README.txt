@@ -17,7 +17,7 @@ autorun, as the OS's own instructions say.
 If an OS can't find its files from autorun/mods/ (for example its file
 browser stays inside autorun/mods), put an empty file named
 "sampleboot.inplace" in its folder: SampleBoot then runs it from autorun/
-itself, as if it were alone on the card. MPCTRACKER needs this.
+itself, as if it were alone on the card. MPCTRACKER and MPC 600 S need this.
 
 Folders starting with "." or "_" are skipped, so renaming one to
 "_Melodee 0.2.0" hides it without deleting it.

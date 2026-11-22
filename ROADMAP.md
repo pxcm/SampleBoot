@@ -50,6 +50,10 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   USB cable at a fixed address, to manage SampleBoot: install a system from
   its zip, rename or hide entries, edit the theme on the real screen.
   Feasibility and need still to be checked.
+- **Stock firmware 1.4.** SampleBoot is tested on firmware 1.3.0.12. On
+  1.4 (1.4.0.7) the MPC runs an `autorun.sh` at the top of the card, only
+  with Developer Mode on, and asks each time before running it. SampleBoot
+  needs to be checked and, if needed, adapted to start the same way there.
 
 ## Proposed to OS authors
 

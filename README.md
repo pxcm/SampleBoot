@@ -86,10 +86,11 @@ starts from `autorun` should work. These are the ones known to work so far.
 | System | Versions | Status | Checked by | Notes | From |
 |---|---|---|---|---|---|
 | Stock firmware | 1.3.0 (1.3.0.12) | Works | Tested | | Akai Professional |
-| SampQOL OS | 0.1.4.7 – 0.3.0 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
-| Melodee | 0.1.0 – 0.3.0 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
-| MPC Simple | 1.0 Beta 1 – Beta 3 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
+| SampQOL OS | 0.1.4.7 – 0.4.0 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
+| Melodee | 0.1.0 – 0.6.8 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
+| MPC Simple | 1.0 Beta 1 – Beta 8 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
 | MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
+| MPC 600 S | v1.7b | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [LA-2500/MPC-600-S](https://github.com/LA-2500/MPC-600-S) |
 | ODDFORM | 1.2.0 beta | Works | User report | | – |
 | Rhythmer OS | 0.2.0 | Works | User report | Keep its `Rhythmer` and `Samples` folders at the card root | [jazzyrhythmer.github.io/mpc-sample](https://jazzyrhythmer.github.io/mpc-sample/) |
 
@@ -190,7 +191,7 @@ wrong from `autorun/mods/`: their file browser stays inside `autorun/mods/`,
 or they don't find their files. Put an empty file named `sampleboot.inplace`
 in the system's folder: SampleBoot then runs it from `autorun/` itself, as if
 it were alone on the card. Nothing on the card is moved.
-**MPCTRACKER** needs this file. If you make a system for the MPC Sample, see
+**MPCTRACKER** and **MPC 600 S** need this file. If you make a system for the MPC Sample, see
 [the notes for OS authors](docs/OS-AUTHORS.md).
 
 ## Settings and colours

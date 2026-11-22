@@ -2,7 +2,7 @@
 
 How to make a system for the MPC Sample that runs from SampleBoot exactly as
 it runs on its own. These are suggestions, not rules: they come from the
-issues found while testing SampQOL OS, Melodee, MPC Simple and MPCTRACKER
+issues found while testing SampQOL OS, Melodee, MPC Simple, MPCTRACKER and MPC 600 S
 with SampleBoot. Questions and ideas are welcome in the
 [issues](https://github.com/pxcm/SampleBoot/issues).
 
@@ -55,6 +55,12 @@ again. Don't use it if you read `/proc/mounts`: the bind adds
   `mpcqol.conf`) are the ones that break. SampleBoot works around
   `mpcqol.conf` itself (`ROOT_FILES`), but a new one would need a new
   workaround.
+
+**A good example: Melodee 0.6.8.** Everything the program needs is inside its
+`autorun` folder (`autorun/melodee/`), found from the script's own folder, so
+it runs from `autorun/mods/<name>/` with nothing to change. Everything the
+user makes or adds (projects, samples, plug-ins) goes in a single top-level
+folder named after the system, `<card>/Melodee/`.
 
 ## 4. Leave the MPC as you found it
 
