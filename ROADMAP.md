@@ -50,10 +50,20 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   USB cable at a fixed address, to manage SampleBoot: install a system from
   its zip, rename or hide entries, edit the theme on the real screen.
   Feasibility and need still to be checked.
-- **Stock firmware 1.4.** SampleBoot is tested on firmware 1.3.0.12. On
-  1.4 (1.4.0.7) the MPC runs an `autorun.sh` at the top of the card, only
-  with Developer Mode on, and asks each time before running it. SampleBoot
-  needs to be checked and, if needed, adapted to start the same way there.
+- **Stock firmware 1.4.** SampleBoot is tested on firmware 1.3.0.12. Akai's
+  official update is 1.4.0.8, and it changes how cards start programs:
+  - the signed `autorun/` folder that 1.3.0.12 starts by itself is no longer
+    started;
+  - with Developer Mode on (Settings, Beta Enhancements), the stock app
+    finds an `autorun.sh` at the top of the card and asks each time whether
+    to run it.
+
+  SampleBoot can start the same way: a top-level `autorun.sh` that starts
+  SampleBoot, plus 1.4.0.8 in the firmware list. The stock app would start
+  first and ask, then the menu would show. Most systems check for firmware
+  1.3.0.12 and won't start on 1.4.0.8 until their authors update them, so
+  this waits until SampQOL and Melodee support it. **Until then, stay on
+  1.3.0.12 if you use SampleBoot.**
 
 ## Proposed to OS authors
 
