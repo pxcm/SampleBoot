@@ -43,7 +43,8 @@ place. `CARD=$(dirname "$D")` or `${D%/*}` only work when your folder is
 If you can't change this, ship an empty file named **`sampleboot.inplace`**
 in your `autorun` folder: SampleBoot then binds your folder over
 `<card>/autorun/` before starting it, so "the folder above" is the card root
-again. Don't use it if you read `/proc/mounts`: the bind adds
+again. Since SampleBoot 1.0.3 such a system gets no other mounts from
+SampleBoot (no `ROOT_FILES` binds). Don't use it if you read `/proc/mounts`: the bind adds
 `<card>/autorun` as a mount point.
 
 ## 3. Keep your files in known places

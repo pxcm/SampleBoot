@@ -86,17 +86,19 @@ starts from `autorun` should work. These are the ones known to work so far.
 | System | Versions | Status | Checked by | Notes | From |
 |---|---|---|---|---|---|
 | Stock firmware | 1.3.0 (1.3.0.12) | Works | Tested | | Akai Professional |
-| SampQOL OS | 0.1.4.7 – 0.4.0 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
-| Melodee | 0.1.0 – 0.6.8 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
+| SampQOL OS | 0.1.4.7 – 0.4.2 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
+| Melodee | 0.1.0 – 0.7.0 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
 | MPC Simple | 1.0 Beta 1 – Beta 8 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
 | MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
 | MPC 600 S | v1.7b | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [LA-2500/MPC-600-S](https://github.com/LA-2500/MPC-600-S) |
+| Am MOD | r30d-beta3 or later | Works | Author | Needs SampleBoot 1.0.3 or later | [AlekseyMalykh/am-mod](https://github.com/AlekseyMalykh/am-mod) |
 | ODDFORM | 1.2.0 beta | Works | User report | | – |
 | Rhythmer OS | 0.2.0 | Works | User report | Keep its `Rhythmer` and `Samples` folders at the card root | [jazzyrhythmer.github.io/mpc-sample](https://jazzyrhythmer.github.io/mpc-sample/) |
 
 *Works with issues* means it starts, but something doesn't work as it does
 without SampleBoot: the notes say what. *Tested*: on the author's MPC Sample.
 *User report*: a user confirmed it works.
+*Author*: the system's author added SampleBoot support and checked it.
 Using another system with SampleBoot? Open an
 [issue](https://github.com/pxcm/SampleBoot/issues) with its name and version,
 and it goes on the list.
@@ -112,7 +114,7 @@ and it goes on the list.
 
 **Back up your SD card first.**
 
-1. Download `SampleBoot-1.0.2.zip` from
+1. Download `SampleBoot-1.0.3.zip` from
    [Releases](../../releases) and unzip it.
 2. Copy its `autorun` folder to the top level of the SD card.
    If the card already has an `autorun` folder from an OS, move that folder
@@ -205,7 +207,7 @@ it were alone on the card. Nothing on the card is moved.
 | `BEEP` | 100 | Level of the countdown beeps, 1–100, scaled by Main Volume (0 = no beeps) |
 | `GRACE` | 60 | Seconds a system gets to start before the stock app starts instead |
 | `BOOT_HISTORY` | 10 | Boots whose logs are kept in `boot-history.log`, each with its date; 0 = none |
-| `ROOT_FILES` | `"mpcqol.conf"` | Settings files an OS keeps at the card root and reads from the folder above its own; SampleBoot shows them in `autorun/mods/` too (SampQOL's 16 USB outputs need this) |
+| `ROOT_FILES` | `"mpcqol.conf"` | Settings files an OS keeps at the card root and reads from the folder above its own; SampleBoot shows them in `autorun/mods/` too (SampQOL's 16 USB outputs need this). Not done for systems with `sampleboot.inplace`, which find them by themselves |
 | `SPLASH` | `"dark"` | Splash screen: `"dark"`, `"light"`, `"off"`, or a name of your own to show `splash-<name>.png` (320×240) from `autorun/sampleboot/` |
 | `SPLASH_TIME` | 2 | Seconds the splash stays on screen; turning or pushing the encoder skips it |
 

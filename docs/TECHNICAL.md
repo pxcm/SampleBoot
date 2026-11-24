@@ -68,7 +68,14 @@ and using it, see the [README](../README.md).
   `sampleboot.inplace`: `mount --bind autorun/mods/<name> autorun`, then the
   start script runs from `autorun/`. For OSes that take the card as the
   parent of their own folder, like MPCTRACKER (`CARD=$(dirname "$D")`, passed
-  to its app as `--card`).
+  to its app as `--card`). Such an OS gets no `ROOT_FILES` binds (since
+  1.0.3): the folder above its own is the card root, so it finds those files
+  there itself, and an extra writable mount would only get in the way (Am
+  MOD's sandbox check refuses to start with one).
+- After starting the OS, the script waits up to `GRACE` seconds (60) for it
+  to take over, and starts the stock app if nothing did. An OS counts as
+  running when `ac50.service` is active, when a process holds the surface
+  MIDI port, or when a process named in `WATCH_PROCS` runs.
 
 ## Files on the card
 

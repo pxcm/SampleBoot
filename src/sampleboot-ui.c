@@ -49,7 +49,7 @@
 #define MAX_ENTRIES 64
 #define BAR 46        /* height of the top and bottom bars */
 #define CONFIRM_S 10  /* the switch-off question goes back to the menu after this */
-#define VERSION "1.0.2"
+#define VERSION "1.0.3"
 #define ARROW_H 18      /* height of the browse arrows, px */
 #define ARROW_SW 2.0    /* their stroke width, px */
 #define SPLASH_REVEAL 0.8  /* seconds the splash takes to appear, line by line */

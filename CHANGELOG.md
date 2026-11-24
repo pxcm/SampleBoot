@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.3
+
+**Fixed**
+- Systems with `sampleboot.inplace` no longer get the `ROOT_FILES` binds
+  (`mpcqol.conf` shown in `autorun/mods/`). They run from `autorun/`, so they
+  find the card-root files by themselves. Am MOD (r30d-beta3) refused to
+  start while that bind was there: it now starts with the default settings,
+  and SampQOL keeps its 16 USB outputs. Nothing changes for systems without
+  `sampleboot.inplace`.
+
 ## 1.0.2
 
 **Added**
