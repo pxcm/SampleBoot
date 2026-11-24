@@ -56,7 +56,8 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
     started;
   - with Developer Mode on (Settings, Beta Enhancements), the stock app
     finds an `autorun.sh` at the top of the card and asks each time whether
-    to run it.
+    to run it. Turning Developer Mode on is recorded permanently on the MPC
+    (the `dev-mode-used` flag).
 
   SampleBoot can start the same way: a top-level `autorun.sh` that starts
   SampleBoot, plus 1.4.0.8 in the firmware list. The stock app would start
