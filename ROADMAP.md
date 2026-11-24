@@ -63,7 +63,11 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   SampleBoot, plus 1.4.0.8 in the firmware list. The stock app would start
   first and ask, then the menu would show. Most systems check for firmware
   1.3.0.12 and won't start on 1.4.0.8 until their authors update them, so
-  this waits until SampQOL and Melodee support it. **Until then, stay on
+  this waits until SampQOL and Melodee support it. Checked in an emulator
+  running 1.4.0.8: SampleBoot 1.0.3 starts from a top-level `autorun.sh`
+  (the `autorun` folder alone is not offered), the menu and the systems
+  start as on 1.3.0.12, and when the stock app asks again later, SampleBoot
+  does not start twice. **Until then, stay on
   1.3.0.12 if you use SampleBoot.**
 
 ## Proposed to OS authors
