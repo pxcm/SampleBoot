@@ -71,7 +71,22 @@ folder named after the system, `<card>/Melodee/`.
   back when you exit.
 - Don't write to the internal storage unless the user asked for it.
 
-## 5. Optional: look good in the menu
+## 5. Offer a restart
+
+Give users a way to restart the MPC from your system, as Am MOD does, so they
+can get back to SampleBoot's menu without switching off and on. It must be a
+real restart (`systemctl reboot`), not only a return to the stock app:
+
+- On firmware 1.3, the MPC starts the card's `autorun` folder again, and the
+  menu appears.
+- On firmware 1.4, the stock app asks again to run the card's script: the
+  user chooses Yes, and the menu appears.
+
+Returning to the stock app alone doesn't bring the menu back: SampleBoot
+starts once per power-on, so on 1.4 the stock app may ask again, but the menu
+doesn't appear.
+
+## 6. Optional: look good in the menu
 
 Put these in your `autorun` folder; the firmware ignores them:
 
@@ -81,7 +96,7 @@ Put these in your `autorun` folder; the firmware ignores them:
 - `sampleboot.txt`: the name in the menu, on the first line (for example
   `MySystem 1.2.0`). Without it, the folder name is shown.
 
-## 6. Firmware 1.4
+## 7. Firmware 1.4
 
 On firmware 1.4 the MPC starts only an `autorun.sh` at the top of the card
 (with Developer Mode on). SampleBoot ships that file for the card, so under
@@ -94,7 +109,7 @@ SampleBoot starts your script with `SAMPLE_BASE_ASKED=1`, as sample-base's own
 top-level `autorun.sh` does: if your system starts only once per power-on,
 that variable tells it the start was asked for.
 
-## 7. Test it and tell us
+## 8. Test it and tell us
 
 1. Copy your `autorun` folder to `<card>/autorun/mods/MySystem/` on a card
    with SampleBoot.
