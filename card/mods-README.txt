@@ -11,6 +11,10 @@ Every folder that holds an OS becomes an entry at the next power-on: its
 autorun.json names the script to start (autorun.sh, launcher.sh, ...), as the
 MPC's firmware reads it.
 
+Releases made for firmware 1.4 often have an autorun.sh at the top, next to
+their autorun folder: copy only their autorun folder here. SampleBoot's own
+autorun.sh, at the top of the card, starts the menu on firmware 1.4.
+
 Some OSes also come with a folder for the top level of the card (MPC Simple:
 MPC-Simple, with its models). Copy that one to the top level, next to
 autorun, as the OS's own instructions say.

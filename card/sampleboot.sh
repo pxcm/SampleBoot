@@ -146,7 +146,9 @@ else
     done
 fi
 log "running mods/$id/$S"
-/bin/sh "$M/$S" 2>&1
+# On firmware 1.4, OSes built on sample-base (Melodee 0.8 and later) start once
+# per power-on unless the start was asked for; this start is.
+SAMPLE_BASE_ASKED=1 /bin/sh "$M/$S" 2>&1
 log "autorun of $id returned, waiting for the app"
 
 # Safety net: if no app runs within GRACE seconds, start the stock app.

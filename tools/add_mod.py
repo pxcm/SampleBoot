@@ -8,14 +8,16 @@ from their release zips:
   python3 add_mod.py /Volumes/MPC Melodee-MPC-Sample-v0.2.0.zip SampQOL-OS-v0.2.0.zip
   python3 add_mod.py /Volumes/MPC some-os.zip --name "Some OS 1.0"
 
-Doing it by hand works just as well: copy the release's "autorun" folder to
-the card, then copy each OS's "autorun" folder into autorun/mods/<name>.
+Doing it by hand works just as well: copy the release's "autorun" folder and
+"autorun.sh" file to the card, then copy each OS's "autorun" folder into
+autorun/mods/<name>.
 """
 import argparse, datetime, os, re, shutil, sys, zipfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 RELEASE_AUTORUN = HERE.parent / "autorun"
+RELEASE_TOP = HERE.parent / "autorun.sh"     # starts SampleBoot on firmware 1.4
 MARKS = ("# SAMPLEBOOT", "# MPC_BOOT_SELECTOR")   # this launcher, and the one of the test builds
 # files in autorun/sampleboot that belong to the user: never overwritten on update
 KEEP = {"sampleboot.conf", "last", "last-boot.log", "sampleboot.txt", "sampleboot.png", "sampleboot.jpg", "sampleboot.jpeg",
@@ -46,6 +48,14 @@ def install(card):
             dest.write_text("".join(f"{h} {v}\n" for h, v in lines.items()))
             continue
         shutil.copyfile(f, dest)
+    # Firmware 1.4 starts only an autorun.sh at the top of the card.
+    if RELEASE_TOP.exists():
+        top = card / "autorun.sh"
+        if top.exists() and "SampleBoot" not in top.read_text(errors="ignore"):
+            bak = card / ("autorun.sh-before-sampleboot-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+            top.rename(bak)
+            print(f"! another autorun.sh was at the top of the card: moved to {bak.name}")
+        shutil.copyfile(RELEASE_TOP, top)
     rm = RELEASE_AUTORUN / "mods" / "README.txt"
     if rm.exists():
         shutil.copyfile(rm, ar / "mods" / "README.txt")
@@ -57,10 +67,15 @@ def install(card):
 
 def autorun_root(names):
     """The OS's autorun folder in a zip: the shortest path holding autorun.json
-    and autorun.check (the firmware's own pair; the script can have any name)."""
+    and autorun.check (the firmware's own pair; the script can have any name),
+    else, for releases made for firmware 1.4 only, the shortest folder named
+    "autorun" with an autorun.sh in it."""
     for n in sorted(names, key=len):
         if n.endswith("autorun.json") and n[: -len("autorun.json")] + "autorun.check" in names:
             return n[: -len("autorun.json")]
+    for n in sorted(names, key=len):
+        if n == "autorun/autorun.sh" or n.endswith("/autorun/autorun.sh"):
+            return n[: -len("autorun.sh")]
     return None
 
 
@@ -95,7 +110,7 @@ def add(card, src, name):
         names = set(z.namelist())
         pre = autorun_root(names)
         if pre is None:
-            sys.exit(f"{src}: no autorun folder (autorun.json and autorun.check) in it")
+            sys.exit(f"{src}: no autorun folder in it")
         files = {n[len(pre):]: (lambda n=n: z.read(n)) for n in names if n.startswith(pre) and not n.endswith("/")}
         # Folders the package puts next to its autorun folder go to the top
         # level of the card, as its own instructions say (MPC Simple: MPC-Simple/).

@@ -9,6 +9,16 @@ and using it, see the [README](../README.md).
   sha256(`autorun.json` + `autorun.sh` + a fixed salt). The salt was found by
   the mpc-sample-plugins project and is also used by sample-base/Melodee. The
   launcher is signed once and never changes; everything else can be edited.
+- Firmware 1.4 (1.4.0.8) no longer starts the signed `autorun` folder. With
+  Developer Mode on, the stock app offers to run an unsigned `autorun.sh` at
+  the top of the card (as a transient systemd unit) and asks each time it
+  starts. SampleBoot's top-level `autorun.sh` only runs `autorun/autorun.sh`,
+  so the same launcher starts on both firmwares; 1.3.0.12 ignores the
+  top-level file. When the stock app asks again later, the marker in `/run`
+  keeps SampleBoot from starting twice.
+- Systems are started with `SAMPLE_BASE_ASKED=1`. On 1.4, sample-base (and so
+  Melodee 0.8 and later) starts only once per power-on unless that variable
+  says the start was asked for.
 - The launcher starts `sampleboot/sampleboot.sh` as its own systemd unit, once
   per power-on (a marker in `/run`). The script stops the stock app
   (`ac50.service`) and runs `sampleboot-ui` from RAM.
@@ -79,6 +89,7 @@ and using it, see the [README](../README.md).
 
 ## Files on the card
 
+    autorun.sh                    starts autorun/autorun.sh on firmware 1.4
     autorun/
       autorun.sh, autorun.json, autorun.check   signed launcher (never changes)
       sampleboot/

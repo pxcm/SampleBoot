@@ -34,7 +34,8 @@ stay on the same card.
 - Without the card, or with its `autorun` folder renamed, the MPC starts as
   stock.
 - The stock Akai app is always one of the choices.
-- Tested on the MPC Sample with firmware 1.3.0 (full version number 1.3.0.12).
+- Works with stock firmware 1.3.0.12 and 1.4.0.8, from the same card
+  (on 1.4, with Developer Mode on: see [Firmware 1.4](#firmware-14)).
   See [Works with](#works-with) for the systems known to work.
 - SampleBoot includes no OS: you download each one from its own project.
 
@@ -83,20 +84,23 @@ stay on the same card.
 SampleBoot runs each system's own `autorun` folder, unchanged, so any OS that
 starts from `autorun` should work. These are the ones known to work so far.
 
-| System | Versions | Status | Checked by | Notes | From |
+| System | Firmware 1.3.0.12 | Firmware 1.4.0.8 | Checked by | Notes | From |
 |---|---|---|---|---|---|
-| Stock firmware | 1.3.0 (1.3.0.12) | Works | Tested | | Akai Professional |
-| SampQOL OS | 0.1.4.7 – 0.4.2 | Works | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
-| Melodee | 0.1.0 – 0.7.0 | Works | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
-| MPC Simple | 1.0 Beta 1 – Beta 8 | Works | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
-| MPCTRACKER | 0.1.0 | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
-| MPC 600 S | v1.7b | Works | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [LA-2500/MPC-600-S](https://github.com/LA-2500/MPC-600-S) |
-| Am MOD | r30d-beta3 or later | Works | Author | Needs SampleBoot 1.0.3 or later | [AlekseyMalykh/am-mod](https://github.com/AlekseyMalykh/am-mod) |
-| ODDFORM | 1.2.0 beta | Works | User report | | – |
-| Rhythmer OS | 0.2.0 | Works | User report | Keep its `Rhythmer` and `Samples` folders at the card root | [jazzyrhythmer.github.io/mpc-sample](https://jazzyrhythmer.github.io/mpc-sample/) |
+| Stock firmware | ✓ | ✓ | Tested | On 1.4, checked in an emulator | Akai Professional |
+| SampQOL OS | 0.1.4.7 – 0.4.2 | Not yet | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
+| Melodee | 0.1.0 – 0.10.3 | – | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
+| MPC Simple | 1.0 Beta 1 – Beta 11 | – | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
+| MPCTRACKER | 0.1.0 | – | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [jeffwebb-to/mpc-sample-tracker](https://github.com/jeffwebb-to/mpc-sample-tracker) |
+| MPC 600 S | v1.7b – v2.0K | – | Tested | Needs an empty `sampleboot.inplace` file in its folder (SampleBoot 1.0.2 or later) | [LA-2500/MPC-600-S](https://github.com/LA-2500/MPC-600-S) |
+| Am MOD | r30d-beta3 – r31a | Not yet | Tested | Needs SampleBoot 1.0.3 or later | [AlekseyMalykh/am-mod](https://github.com/AlekseyMalykh/am-mod) |
+| DFOS | V.0.1.105 | – | Tested | | – |
+| ODDFORM | 1.2.0 beta | – | User report | | – |
+| Rhythmer OS | 0.2.0 – 0.3.0 | – | Tested | Keep its `Rhythmer` and `Samples` folders at the card root | [jazzyrhythmer.github.io/mpc-sample](https://jazzyrhythmer.github.io/mpc-sample/) |
 
-*Works with issues* means it starts, but something doesn't work as it does
-without SampleBoot: the notes say what. *Tested*: on the author's MPC Sample.
+The firmware columns show the versions known to work. *Not yet*: the system
+itself runs only on 1.3.0.12 for now (SampQOL and Am MOD change the stock app
+of 1.3.0.12). *–*: not checked on that firmware yet.
+*Tested*: on the author's MPC Sample.
 *User report*: a user confirmed it works.
 *Author*: the system's author added SampleBoot support and checked it.
 Using another system with SampleBoot? Open an
@@ -105,7 +109,7 @@ and it goes on the list.
 
 ## Requirements
 
-- Akai MPC Sample with firmware 1.3.0 (1.3.0.12)
+- Akai MPC Sample with firmware 1.3.0.12, or 1.4.0.8 with Developer Mode on
 - An SD card, and a computer to copy files to it
 - The custom OSes you want, downloaded from their own projects
 - Optional: Python 3, for the helper script
@@ -114,20 +118,23 @@ and it goes on the list.
 
 **Back up your SD card first.**
 
-1. Download `SampleBoot-1.0.3.zip` from
+1. Download `SampleBoot-1.0.4.zip` from
    [Releases](../../releases) and unzip it.
-2. Copy its `autorun` folder to the top level of the SD card.
+2. Copy its `autorun` folder and its `autorun.sh` file to the top level of the
+   SD card. (Firmware 1.3.0.12 only needs the folder; 1.4 needs the file too.)
    If the card already has an `autorun` folder from an OS, move that folder
    aside first: it becomes one of your systems in the next step.
 3. For each OS, copy the `autorun` folder from its release into
    `autorun/mods/` and rename it to the name you want in the menu. If the OS
    also comes with a folder for the top level of the card (MPC Simple's
    `MPC-Simple`), copy that one to the top level, as its instructions say.
-4. Put the card in the MPC and switch it on.
+4. Put the card in the MPC and switch it on. On firmware 1.4, see
+   [Firmware 1.4](#firmware-14) first.
 
 The card then looks like this:
 
 ```text
+autorun.sh                                  starts SampleBoot on firmware 1.4
 autorun/
   autorun.sh  autorun.json  autorun.check   SampleBoot's launcher, do not edit
   sampleboot/                               SampleBoot itself and its settings
@@ -139,9 +146,28 @@ autorun/
 To add, update or remove an OS later, copy, replace or delete its folder in
 `autorun/mods/`. A folder whose name starts with `_` is hidden from the menu.
 
+### Firmware 1.4
+
+From firmware 1.4, the MPC no longer starts the card's `autorun` folder by
+itself. It starts only an `autorun.sh` at the top of the card, and only with
+**Developer Mode** on:
+
+1. On the MPC, hold **SHIFT** and press **Pad 8** (MIDI Config). Under
+   **Dev Enhancements (Beta)**, turn **Developer Mode** on. Note: the MPC
+   records permanently that Developer Mode was turned on.
+2. Put the card in. The MPC asks whether to run the script on the card: choose
+   **Yes**, and SampleBoot's menu appears.
+3. If you then choose the stock firmware, the MPC may ask again later: choose
+   **No**. SampleBoot doesn't start twice anyway.
+
+The menu appears about half a minute later than on 1.3, because the stock app
+starts first and asks. Systems that change the stock app of 1.3.0.12 (SampQOL,
+Am MOD) don't run on 1.4: see [Works with](#works-with). If the card has an
+`autorun.sh` at the top from another launcher, replace it with SampleBoot's.
+
 ### Updating SampleBoot
 
-Copy the new release's `autorun` folder over the old one. Your systems in
+Copy the new release's `autorun` folder and `autorun.sh` over the old ones. Your systems in
 `mods/` stay. Copying replaces `sampleboot/sampleboot.conf` too: if you changed
 it, keep a copy and put it back.
 
@@ -248,6 +274,9 @@ and sends nothing anywhere:
   `boot-history.log`, next to it, has the boots before, oldest first.
 - If the MPC hangs, hold POWER until it switches off, remove the card and
   rename its `autorun` folder to `autorun-off`. The MPC then starts as stock.
+- Firmware 1.4: if the MPC doesn't ask to run the card's script, check that
+  Developer Mode is on and that `autorun.sh` is at the top of the card, next to
+  the `autorun` folder.
 - Folder names may contain spaces. If an OS does not start from such a folder,
   rename the folder without spaces and put the name in `sampleboot.txt`.
 - To report a problem, open an [issue](../../issues) and attach

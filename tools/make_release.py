@@ -47,6 +47,8 @@ def main():
     (ar / "mods").mkdir()
     (ar / "autorun.sh").write_bytes(STUB.encode())
     (ar / "autorun.json").write_bytes(MANIFEST.encode())
+    # Firmware 1.4 starts only an autorun.sh at the top of the card (Developer Mode).
+    shutil.copyfile(ROOT / "card" / "autorun-top.sh", out / "autorun.sh")
     (ar / "autorun.check").write_text(hashlib.sha256(MANIFEST.encode() + STUB.encode() + SALT).hexdigest())
     shutil.copyfile(binary, ar / "sampleboot" / "sampleboot-ui")
     (ar / "sampleboot" / "sampleboot-ui").chmod(0o755)

@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.4
+
+**Added**
+- **Stock firmware 1.4.0.8.** One card now works on 1.3.0.12 and on 1.4.0.8.
+  Firmware 1.4 starts only an `autorun.sh` at the top of the card, with
+  Developer Mode on, and asks first: the release now has that file, which
+  starts SampleBoot. Firmware 1.3.0.12 ignores it. See "Firmware 1.4" in the
+  README.
+- 1.4.0.8 in the firmware list, so the log and the menu show its version.
+- Systems are started with `SAMPLE_BASE_ASKED=1`: on 1.4, systems built on
+  sample-base (Melodee 0.8 and later) otherwise start only once per power-on.
+
+**Changed**
+- The compatibility list shows which versions work on each firmware.
+- `add_mod.py` installs the top-level `autorun.sh` too (moving another
+  launcher's one aside), and adds OSes whose release has only an `autorun`
+  folder with an `autorun.sh`, as releases made for firmware 1.4 can.
+
 ## 1.0.3
 
 **Fixed**

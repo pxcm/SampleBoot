@@ -81,7 +81,20 @@ Put these in your `autorun` folder; the firmware ignores them:
 - `sampleboot.txt`: the name in the menu, on the first line (for example
   `MySystem 1.2.0`). Without it, the folder name is shown.
 
-## 6. Test it and tell us
+## 6. Firmware 1.4
+
+On firmware 1.4 the MPC starts only an `autorun.sh` at the top of the card
+(with Developer Mode on). SampleBoot ships that file for the card, so under
+SampleBoot your top-level `autorun.sh` is not used: only your `autorun`
+folder is copied into `autorun/mods/<name>/`. Keep everything your system needs
+to start in the `autorun` folder, and have the top-level file only start
+`autorun/autorun.sh`, as SampleBoot, sample-base and Melodee do.
+
+SampleBoot starts your script with `SAMPLE_BASE_ASKED=1`, as sample-base's own
+top-level `autorun.sh` does: if your system starts only once per power-on,
+that variable tells it the start was asked for.
+
+## 7. Test it and tell us
 
 1. Copy your `autorun` folder to `<card>/autorun/mods/MySystem/` on a card
    with SampleBoot.

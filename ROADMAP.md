@@ -50,26 +50,6 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
   USB cable at a fixed address, to manage SampleBoot: install a system from
   its zip, rename or hide entries, edit the theme on the real screen.
   Feasibility and need still to be checked.
-- **Stock firmware 1.4.** SampleBoot is tested on firmware 1.3.0.12. Akai's
-  official update is 1.4.0.8, and it changes how cards start programs:
-  - the signed `autorun/` folder that 1.3.0.12 starts by itself is no longer
-    started;
-  - with Developer Mode on (Settings, Beta Enhancements), the stock app
-    finds an `autorun.sh` at the top of the card and asks each time whether
-    to run it. Turning Developer Mode on is recorded permanently on the MPC
-    (the `dev-mode-used` flag).
-
-  SampleBoot can start the same way: a top-level `autorun.sh` that starts
-  SampleBoot, plus 1.4.0.8 in the firmware list. The stock app would start
-  first and ask, then the menu would show. Most systems check for firmware
-  1.3.0.12 and won't start on 1.4.0.8 until their authors update them, so
-  this waits until SampQOL and Melodee support it. Checked in an emulator
-  running 1.4.0.8: SampleBoot 1.0.3 starts from a top-level `autorun.sh`
-  (the `autorun` folder alone is not offered), the menu and the systems
-  start as on 1.3.0.12, and when the stock app asks again later, SampleBoot
-  does not start twice. **Until then, stay on
-  1.3.0.12 if you use SampleBoot.**
-
 ## Proposed to OS authors
 
 - **One folder for the mods' own files: `MPC-Mods/`.** At the card root,
@@ -82,6 +62,8 @@ are welcome in the [issues](https://github.com/pxcm/SampleBoot/issues).
 
 ## Done
 
+- **1.0.4:** stock firmware 1.4.0.8 next to 1.3.0.12, on the same card (with
+  Developer Mode on, from an `autorun.sh` at the top of the card).
 - **Compatibility list** in the README and on the website: systems tested by
   the author and systems users report working.
 - **1.0.1:** SampQOL OS 0.3.0's 16 USB outputs work when it is started from
