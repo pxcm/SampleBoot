@@ -86,7 +86,7 @@ starts from `autorun` should work. These are the ones known to work so far.
 
 | System | Firmware 1.3.0.12 | Firmware 1.4.0.8 | Checked by | Notes | From |
 |---|---|---|---|---|---|
-| Stock firmware | ✓ | ✓ | Tested | On 1.4, checked in an emulator | Akai Professional |
+| Stock firmware | ✓ | ✓ | Tested | On 1.4, checked in the [Virtual MPC Sample](https://github.com/orrpunk-art/virtual-mpc-sample) emulator | Akai Professional |
 | SampQOL OS | 0.1.4.7 – 0.4.2 | Not yet | Tested | 16 USB outputs: SampleBoot 1.0.1 or later | [beatops.io/sampqol](https://beatops.io/sampqol) |
 | Melodee | 0.1.0 – 0.10.3 | – | Tested | Update it by replacing its folder | [keremimo/melodee-sample](https://github.com/keremimo/melodee-sample) |
 | MPC Simple | 1.0 Beta 1 – Beta 11 | – | Tested | | [mpcsimple.com](https://mpcsimple.com/) |
@@ -164,6 +164,12 @@ The menu appears about half a minute later than on 1.3, because the stock app
 starts first and asks. Systems that change the stock app of 1.3.0.12 (SampQOL,
 Am MOD) don't run on 1.4: see [Works with](#works-with). If the card has an
 `autorun.sh` at the top from another launcher, replace it with SampleBoot's.
+
+Firmware 1.4 support was tested in the [Virtual MPC Sample](https://github.com/orrpunk-art/virtual-mpc-sample) emulator,
+not yet on a real MPC: many thanks to its author, orrpunk-art. In the emulator,
+systems built on sample-base (Melodee, Rhythmer OS) stop when they look for
+the MPC's audio card, which the emulator doesn't have. If you try SampleBoot
+on a real MPC with firmware 1.4, please tell us how it goes.
 
 ### Updating SampleBoot
 
